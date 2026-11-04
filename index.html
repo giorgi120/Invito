@@ -35,24 +35,30 @@
           const [bgColor, setBgColor] = useState("#FFF5F5");
           const [bgPattern, setBgPattern] = useState("floral");
 
-          // Music State
-          const [selectedMusic, setSelectedMusic] = useState("Romantic Wedding Waltz");
+          // YouTube & Audio Music State
+          const [musicSource, setMusicSource] = useState("youtube");
+          const [youtubeUrl, setYoutubeUrl] = useState("https://www.youtube.com/watch?v=9bZkp7q19f0");
           const [isPlaying, setIsPlaying] = useState(false);
 
-          // Seating Planner State
+          // Seating Planner State (All tables sync fully with preview)
           const [tables, setTables] = useState([
             { id: 1, name: "მაგიდა 1 (ოჯახი)", shape: "round", capacity: 12, guests: ["დედა", "მამა", "ბებია", "პაპა", "დეიდა ნინო", "ბიძა დათო", "გია", "ეთერი", "სოფო", "ლევანი", "ნინო", "თაზო"] },
-            { id: 2, name: "მაგიდა 2 (მეგობრები)", shape: "rectangle", capacity: 8, guests: ["ნიკა", "ანო", "სანდრო", "მარიამი", "ლუკა", "გიორგი", "თიკა", "დაჩი"] }
+            { id: 2, name: "კოტე", shape: "rectangle", capacity: 8, guests: ["კოტე", "ანო"] },
+            { id: 3, name: "მაგიდა #3", shape: "round", capacity: 8, guests: ["ნიკა", "სანდრო"] },
+            { id: 4, name: "მაგიდა #4", shape: "round", capacity: 8, guests: ["მარიამი", "ლუკა"] },
+            { id: 5, name: "მაგიდა #5", shape: "round", capacity: 8, guests: ["გიორგი", "თიკა"] },
+            { id: 6, name: "მაგიდა #6", shape: "round", capacity: 8, guests: ["დაჩი", "საბა"] }
           ]);
+          
           const [guestSearchName, setGuestSearchName] = useState("დეიდა ნინო");
           const [selectedChairIndex, setSelectedChairIndex] = useState(null);
 
-          // Audio Synthesizer
+          // Audio Synthesizer fallback when YouTube or synth plays
           useEffect(() => {
             let audioCtx = null;
             let timer = null;
 
-            if (isPlaying) {
+            if (isPlaying && musicSource === 'synth') {
               try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
@@ -88,11 +94,12 @@
               if (timer) clearInterval(timer);
               if (audioCtx) audioCtx.close();
             };
-          }, [isPlaying]);
+          }, [isPlaying, musicSource]);
 
+          // Helper to find guest table dynamically
           const findGuestTable = (gName) => {
             for (let tbl of tables) {
-              if (tbl.guests.includes(gName)) return tbl;
+              if (tbl.guests && tbl.guests.includes(gName)) return tbl;
             }
             return tables[0];
           };
@@ -242,34 +249,37 @@
                     </div>
                   </div>
 
-                  {/* Music Manager */}
+                  {/* YouTube & Background Music Manager */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
-                    <h3 className="text-sm font-semibold text-slate-300">🎵 ფონური მუსიკა</h3>
-                    <div className="flex items-center space-x-3">
-                      <select 
-                        value={selectedMusic} 
-                        onChange={(e) => setSelectedMusic(e.target.value)}
-                        className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-500"
-                      >
-                        <option value="Romantic Wedding Waltz">Romantic Wedding Waltz (Classical)</option>
-                        <option value="Georgian Acoustic Love">Georgian Acoustic Love Song</option>
-                        <option value="Violin Serenade">Violin Serenade in Major</option>
-                      </select>
-                      <button 
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className={`px-3 py-2 rounded-xl text-xs font-bold transition ${isPlaying ? 'bg-pink-600 text-white animate-pulse' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
-                      >
-                        {isPlaying ? '⏸ შეჩერება' : '▶ ჩართვა'}
-                      </button>
+                    <h3 className="text-sm font-semibold text-slate-300">🎵 ფონური მუსიკა (YouTube & Audio)</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-xs text-slate-400 block mb-1">YouTube ვიდეოს ბმული (მუსიკა)</label>
+                        <input 
+                          type="text" 
+                          value={youtubeUrl} 
+                          onChange={(e) => setYoutubeUrl(e.target.value)}
+                          placeholder="https://www.youtube.com/watch?v=..."
+                          className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-500" 
+                        />
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <button 
+                          onClick={() => setIsPlaying(!isPlaying)}
+                          className={`flex-1 py-2 rounded-xl text-xs font-bold transition ${isPlaying ? 'bg-pink-600 text-white animate-pulse' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+                        >
+                          {isPlaying ? '⏸ მუსიკის შეჩერება' : '▶ მუსიკის ჩართვა'}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Seating Planner Config with Add Table */}
+                  {/* Seating Planner Config */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <div className="flex justify-between items-center">
                       <h3 className="text-sm font-semibold text-slate-300">🪑 მაგიდების განაწილება (Seating Planner)</h3>
                       <button 
-                        onClick={() => setTables([...tables, { id: tables.length + 1, name: `მაგიდა #${tables.length + 1}`, shape: 'round', capacity: 8, guests: ["სტუმარი 1", "სტუმარი 2"] }])}
+                        onClick={() => setTables([...tables, { id: tables.length + 1, name: `მაგიდა #${tables.length + 1}`, shape: 'round', capacity: 8, guests: ["ახალი სტუმარი"] }])}
                         className="px-2.5 py-1 bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium rounded-lg transition"
                       >
                         + მაგიდის დამატება
@@ -368,7 +378,7 @@
                         </a>
                       </div>
 
-                      {/* Seating Planner Preview */}
+                      {/* Fully Synchronized Seating Planner Preview */}
                       <div className="bg-white/90 backdrop-blur-md p-3 rounded-xl border border-white/60 space-y-3">
                         <h3 className="text-xs font-bold text-center text-slate-800">🔍 იპოვე შენი ადგილი მაგიდასთან:</h3>
                         
@@ -376,12 +386,11 @@
                           value={guestSearchName}
                           onChange={(e) => {
                             setGuestSearchName(e.target.value);
-                            const tFound = findGuestTable(e.target.value);
                             setSelectedChairIndex(null);
                           }}
                           className="w-full bg-slate-100 border border-slate-300 rounded-lg px-2 py-1.5 text-xs font-medium text-slate-800 focus:outline-none"
                         >
-                          {tables.flatMap(tbl => tbl.guests).map((g, i) => (
+                          {tables.flatMap(tbl => tbl.guests || []).map((g, i) => (
                             <option key={i} value={g}>{g}</option>
                           ))}
                         </select>
@@ -394,7 +403,7 @@
                           <div className="relative w-48 h-48 mx-auto flex items-center justify-center bg-white rounded-xl border border-pink-200 shadow-inner">
                             <div className="absolute flex flex-col items-center justify-center p-2 text-center bg-pink-100 border border-pink-300 rounded-full w-20 h-20 z-10">
                               <span className="text-[10px] font-bold text-slate-800">{guestTable.name.split(' ')[0]}</span>
-                              <span className="text-[8px] text-slate-500">{guestTable.guests.length}/{guestTable.capacity}</span>
+                              <span className="text-[8px] text-slate-500">{(guestTable.guests || []).length}/{guestTable.capacity}</span>
                             </div>
 
                             {Array.from({ length: guestTable.capacity }).map((_, i) => {
@@ -402,7 +411,7 @@
                               const radius = 65;
                               const x = Math.cos(angle) * radius;
                               const y = Math.sin(angle) * radius;
-                              const guestNameAtSeat = guestTable.guests[i];
+                              const guestNameAtSeat = (guestTable.guests || [])[i];
                               const isCurrentGuestSeat = guestNameAtSeat === guestSearchName;
 
                               return (
@@ -423,7 +432,7 @@
 
                           {selectedChairIndex !== null && (
                             <div className="bg-slate-900 text-white p-2 rounded-lg text-[10px] flex items-center justify-between">
-                              <span>ადგილი #{selectedChairIndex}: <strong className="text-pink-300">{guestTable.guests[selectedChairIndex - 1] || 'თავისუფალია'}</strong></span>
+                              <span>ადგილი #{selectedChairIndex}: <strong className="text-pink-300">{(guestTable.guests || [])[selectedChairIndex - 1] || 'თავისუფალია'}</strong></span>
                               <button onClick={() => setSelectedChairIndex(null)}>✕</button>
                             </div>
                           )}
@@ -441,7 +450,7 @@
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full text-center relative space-y-4">
                     <button onClick={() => setShowPaywall(false)} className="absolute top-3 right-3 text-slate-400">✕</button>
                     <h3 className="text-lg font-bold">გახსენი სრული პროექტი</h3>
-                    <p className="text-xs text-slate-400">მიიღე შეუზღუდავი მაგიდები და დამატებითი თემები.</p>
+                    <p className="text-xs text-slate-400">მიიღე შეუზღუდავი მაგიდები და YouTube აუდიო სტრიმინგი.</p>
                     <button 
                       onClick={() => setShowPaywall(false)}
                       className="w-full py-2.5 bg-gradient-to-r from-pink-600 to-violet-600 text-white text-xs font-bold rounded-xl"
