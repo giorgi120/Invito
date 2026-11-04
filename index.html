@@ -1,0 +1,1678 @@
+import React, { useState } from 'react';
+import { 
+  Smartphone, 
+  Sparkles, 
+  Lock, 
+  Unlock, 
+  CreditCard, 
+  QrCode, 
+  Users, 
+  Calendar, 
+  MapPin, 
+  Heart, 
+  Music, 
+  Layout, 
+  Globe, 
+  Check, 
+  Zap, 
+  ShieldCheck, 
+  ArrowRight, 
+  Download, 
+  Copy, 
+  Eye, 
+  Sliders, 
+  Plus, 
+  Trash2, 
+  Volume2, 
+  VolumeX, 
+  Languages, 
+  Upload, 
+  Video, 
+  Image as ImageIcon, 
+  Palette, 
+  ExternalLink,
+  Play,
+  Pause
+} from 'lucide-react';
+
+// Multi-language Translations Dictionary
+const translations = {
+  ka: {
+    appTitle: "Weddify Studio",
+    appSubtitle: "ციფრული მოსაწვევების და ღონისძიებების პლატფორმა",
+    editorTab: "მოსაწვევის რედაქტორი",
+    seatingTab: "მაგიდების განაწილება",
+    storeGuideTab: "App Store არქიტექტურა",
+    testSubscribed: "ტესტური გამოწერა:",
+    unlockFeatures: "ყველა ფუნქციის გახსნა",
+    activePlan: "აქტიური პაკეტი",
+    livePreviewMode: "ცოცხალი რეჟიმი",
+    eventCustomizer: "ღონისძიების მორგება",
+    customizerSubtitle: "აწყვეტ მოსაწვევი უფასოდ! გადაიხადეთ მხოლოდ მაშინ, როცა მზად იქნებით სტუმრებისთვის გაზიარებისთვის.",
+    publishBtn: "საიტის გამოქვეყნება",
+    copyLinkBtn: "ბმულის კოპირება",
+    copied: "კოპირებულია!",
+    downloadQrBtn: "QR კოდის ჩამოტვირთვა",
+    themeSection: "ვიზუალური თემა და სტილი",
+    customAccent: "საკუთარი ფერი:",
+    coupleDetails: "წყვილის მონაცემები",
+    groomLabel: "სიძის სახელი",
+    brideLabel: "პატარძლის სახელი",
+    coverMediaLabel: "გარეკანის მედია (ფოტო ან მოკლე ვიდეო)",
+    mediaTypePhoto: "ფოტო",
+    mediaTypeVideo: "ვიდეო",
+    uploadFileBtn: "ფაილის ატვირთვა",
+    presetLibraryBtn: "შაბლონები",
+    dateLocation: "თარიღი და ლოკაცია",
+    dateLabel: "ღონისძიების თარიღი",
+    timeLabel: "დრო",
+    venueLabel: "ადგილმდებარეობის დასახელება",
+    addressLabel: "მისამართი / დეტალები",
+    mapUrlLabel: "Google Maps / Waze ზუსტი ლოკაციის ბმული",
+    mapUrlPlaceholder: "https://maps.google.com/?q=...",
+    storySectionTitle: "მისალმება და ისტორია",
+    welcomeStoryLabel: "მისალმებელი ტექსტი სტუმრებისთვის",
+    musicSectionTitle: "ფონური მუსიკა",
+    uploadAudioBtn: "MP3 აუდიო ატვირთვა",
+    audioUrlLabel: "ან ჩასვით MP3 პირდაპირი ბმული",
+    presetMusicTracks: "მზა საქორწილო მელოდიები",
+    seatingTitle: "ინტერაქტიული მაგიდები",
+    seatingSubtitle: "მართეთ მაგიდების ფორმები და ტევადობა ლიმიტების გარეშე",
+    tableShapeLabel: "მაგიდის ფორმა",
+    tableCapacityLabel: "ადგილების რაოდენობა მაგიდაზე",
+    exportList: "სიის ექსპორტი",
+    addTable: "ახალი მაგიდის დამატება",
+    addGuest: "სტუმრის დამატება",
+    guestPlaceholder: "სტუმრის სახელი და გვარი...",
+    seats: "ადგილი",
+    seatNum: "ადგილი",
+    shapeRound: "მრგვალი",
+    shapeOval: "ოვალური",
+    shapeSquare: "ოთხკუთხედი",
+    shapeRectangle: "მართკუთხედი",
+    realtimePreview: "რეალური მობილურის სიმულატორი",
+    gettingMarried: "ქორწინდებიან",
+    dateAndTime: "თარიღი & დრო",
+    locationHeading: "ადგილმდებარეობა",
+    openMaps: "ზუსტ ლოკაციაზე გადასვლა",
+    welcomeHeading: "მოწვევა",
+    rsvpTitle: "დასწრების დადასტურება (RSVP)",
+    yourNamePlaceholder: "თქვენი სახელი და გვარი",
+    willAttend: "დავესწრები ✨",
+    cannotCome: "ვერ მოვდივარ",
+    guestLangSwitch: "სტუმრის ენა:",
+    selectYourName: "იპოვე შენი ადგილი მაგიდასთან:",
+    findMySeat: "ჩემი ადგილის ნახვა",
+    yourTable: "შენი მაგიდა",
+    paywallTitle: "გახსენით",
+    paywallSubtitle: "თქვენ წარმატებით აწყვეთ მოსაწვევი! აირჩიეთ პაკეტი საიტის გასააქტიურებლად და სტუმრებისთვის გასაზიარებლად.",
+    instantActivation: "მყისიერი გააქტიურება",
+    secureCheckout: "უსაფრთხო გადახდა Apple/Google Pay",
+    mostPopular: "ყველაზე პოპულარული",
+    activate: "გააქტიურება"
+  },
+  en: {
+    appTitle: "Weddify Studio",
+    appSubtitle: "Digital Event & Wedding Builder Platform",
+    editorTab: "Invitation Editor",
+    seatingTab: "Seating Planner",
+    storeGuideTab: "App Store Architecture",
+    testSubscribed: "Test Subscribed Mode:",
+    unlockFeatures: "Unlock All Features",
+    activePlan: "Active Plan",
+    livePreviewMode: "Live Preview Mode",
+    eventCustomizer: "Event Customizer",
+    customizerSubtitle: "Customize all details freely. Pay only when you are ready to share the live website link with guests!",
+    publishBtn: "Publish Website",
+    copyLinkBtn: "Copy Link",
+    copied: "Copied!",
+    downloadQrBtn: "Download QR",
+    themeSection: "Visual Theme & Styling",
+    customAccent: "Custom Color:",
+    coupleDetails: "Couple Details",
+    groomLabel: "Groom Name",
+    brideLabel: "Bride Name",
+    coverMediaLabel: "Cover Media (Photo or Short Video)",
+    mediaTypePhoto: "Photo",
+    mediaTypeVideo: "Video",
+    uploadFileBtn: "Upload File",
+    presetLibraryBtn: "Presets",
+    dateLocation: "Date & Location",
+    dateLabel: "Event Date",
+    timeLabel: "Time",
+    venueLabel: "Venue Name",
+    addressLabel: "Address / Details",
+    mapUrlLabel: "Google Maps / Waze Direct Location URL",
+    mapUrlPlaceholder: "https://maps.google.com/?q=...",
+    storySectionTitle: "Welcome & Love Story",
+    welcomeStoryLabel: "Welcome Story / Message for Guests",
+    musicSectionTitle: "Background Music",
+    uploadAudioBtn: "Upload MP3 Audio File",
+    audioUrlLabel: "Or Paste Direct MP3 Link",
+    presetMusicTracks: "Preset Wedding Tracks",
+    seatingTitle: "Interactive Table Seating",
+    seatingSubtitle: "Manage table shapes and seat capacity without any limits",
+    tableShapeLabel: "Table Shape",
+    tableCapacityLabel: "Seat Capacity per Table",
+    exportList: "Export List",
+    addTable: "Add New Table",
+    addGuest: "Add Guest",
+    guestPlaceholder: "Guest Full Name...",
+    seats: "Seats",
+    seatNum: "Seat",
+    shapeRound: "Round",
+    shapeOval: "Oval",
+    shapeSquare: "Square",
+    shapeRectangle: "Rectangle",
+    realtimePreview: "Real-Time Mobile Simulator",
+    gettingMarried: "We Are Getting Married",
+    dateAndTime: "Date & Time",
+    locationHeading: "Location",
+    openMaps: "Open in Exact Location",
+    welcomeHeading: "Welcome Message",
+    rsvpTitle: "RSVP Attendance",
+    yourNamePlaceholder: "Your Full Name",
+    willAttend: "Will Attend ✨",
+    cannotCome: "Cannot Come",
+    guestLangSwitch: "Guest Language:",
+    selectYourName: "Find your assigned seat:",
+    findMySeat: "Find My Seat",
+    yourTable: "Your Assigned Table",
+    paywallTitle: "Unlock Premium",
+    paywallSubtitle: "You constructed your entire event for free! Choose an activation pass to make your website live and shareable.",
+    instantActivation: "Instant Activation",
+    secureCheckout: "Secure Checkout Apple/Google Pay",
+    mostPopular: "Most Popular",
+    activate: "Activate"
+  },
+  ru: {
+    appTitle: "Weddify Studio",
+    appSubtitle: "Платформа цифровых приглашений и мероприятий",
+    editorTab: "Редактор приглашения",
+    seatingTab: "Рассадка гостей",
+    storeGuideTab: "Архитектура App Store",
+    testSubscribed: "Тестовая подписка:",
+    unlockFeatures: "Разблокировать все",
+    activePlan: "Активный план",
+    livePreviewMode: "Живой просмотр",
+    eventCustomizer: "Настройка мероприятия",
+    customizerSubtitle: "Создавайте бесплатно! Оплачивайте только при готовности поделиться ссылкой с гостями.",
+    publishBtn: "Опубликовать сайт",
+    copyLinkBtn: "Копировать ссылку",
+    copied: "Скопировано!",
+    downloadQrBtn: "Скачать QR",
+    themeSection: "Визуальная тема и стиль",
+    customAccent: "Свой цвет:",
+    coupleDetails: "Данные пары",
+    groomLabel: "Имя жениха",
+    brideLabel: "Имя невесты",
+    coverMediaLabel: "Медиа обложки (Фото или короткое видео)",
+    mediaTypePhoto: "Фото",
+    mediaTypeVideo: "Видео",
+    uploadFileBtn: "Загрузить файл",
+    presetLibraryBtn: "Шаблоны",
+    dateLocation: "Дата и локация",
+    dateLabel: "Дата мероприятия",
+    timeLabel: "Время",
+    venueLabel: "Название площадки",
+    addressLabel: "Адрес / Детали",
+    mapUrlLabel: "Ссылка на Google Maps / Waze",
+    mapUrlPlaceholder: "https://maps.google.com/?q=...",
+    storySectionTitle: "Приветствие и история",
+    welcomeStoryLabel: "Приветственное сообщение",
+    musicSectionTitle: "Фоновая музыка",
+    uploadAudioBtn: "Загрузить MP3 файл",
+    audioUrlLabel: "Или вставьте прямую ссылку MP3",
+    presetMusicTracks: "Готовые свадебные треки",
+    seatingTitle: "Интерактивная рассадка",
+    seatingSubtitle: "Управляйте формой столов и количеством мест без ограничений",
+    tableShapeLabel: "Форма стола",
+    tableCapacityLabel: "Мест на столе",
+    exportList: "Экспорт списка",
+    addTable: "Добавить стол",
+    addGuest: "Добавить",
+    guestPlaceholder: "ФИО гостя...",
+    seats: "Мест",
+    seatNum: "Место",
+    shapeRound: "Круглый",
+    shapeOval: "Овальный",
+    shapeSquare: "Квадратный",
+    shapeRectangle: "Прямоугольный",
+    realtimePreview: "Мобильный симулятор",
+    gettingMarried: "Мы женимся",
+    dateAndTime: "Дата и время",
+    locationHeading: "Локация",
+    openMaps: "Открыть точную карту",
+    welcomeHeading: "Приглашение",
+    rsvpTitle: "Подтверждение присутствия (RSVP)",
+    yourNamePlaceholder: "Ваше имя и фамилия",
+    willAttend: "Я приду ✨",
+    cannotCome: "Не смогу прийти",
+    guestLangSwitch: "Язык гостя:",
+    selectYourName: "Найдите свое место за столом:",
+    findMySeat: "Мое место",
+    yourTable: "Ваш стол",
+    paywallTitle: "Разблокировать",
+    paywallSubtitle: "Вы полностью оформили приглашение! Выберите тариф, чтобы опубликовать сайт.",
+    instantActivation: "Мгновенная активация",
+    secureCheckout: "Безопасная оплата Apple/Google Pay",
+    mostPopular: "Популярный",
+    activate: "Активировать"
+  },
+  es: {
+    appTitle: "Weddify Studio",
+    appSubtitle: "Plataforma de Invitaciones Digitales",
+    editorTab: "Editor de Invitación",
+    seatingTab: "Planificador de Mesas",
+    storeGuideTab: "Arquitectura App Store",
+    testSubscribed: "Modo Prueba Subscrito:",
+    unlockFeatures: "Desbloquear Todo",
+    activePlan: "Plan Activo",
+    livePreviewMode: "Vista Previa en Vivo",
+    eventCustomizer: "Personalizador de Evento",
+    customizerSubtitle: "¡Personaliza todo gratis! Paga solo cuando estés listo para compartir con tus invitados.",
+    publishBtn: "Publicar Sitio",
+    copyLinkBtn: "Copiar Enlace",
+    copied: "¡Copiado!",
+    downloadQrBtn: "Descargar QR",
+    themeSection: "Tema Visual y Estilo",
+    customAccent: "Color Personalizado:",
+    coupleDetails: "Detalles de la Pareja",
+    groomLabel: "Nombre del Novio",
+    brideLabel: "Nombre de la Novia",
+    coverMediaLabel: "Portada Multimedia (Foto o Video corto)",
+    mediaTypePhoto: "Foto",
+    mediaTypeVideo: "Video",
+    uploadFileBtn: "Subir Archivo",
+    presetLibraryBtn: "Plantillas",
+    dateLocation: "Fecha y Lugar",
+    dateLabel: "Fecha del Evento",
+    timeLabel: "Hora",
+    venueLabel: "Nombre del Lugar",
+    addressLabel: "Dirección / Detalles",
+    mapUrlLabel: "Enlace directo Google Maps / Waze",
+    mapUrlPlaceholder: "https://maps.google.com/?q=...",
+    storySectionTitle: "Bienvenida e Historia",
+    welcomeStoryLabel: "Mensaje de Bienvenida",
+    musicSectionTitle: "Música de Fondo",
+    uploadAudioBtn: "Subir Archivo MP3",
+    audioUrlLabel: "O pega enlace directo MP3",
+    presetMusicTracks: "Pistas de Boda Predeterminadas",
+    seatingTitle: "Planificador de Mesas Interactivo",
+    seatingSubtitle: "Gestiona formas de mesa y capacidad de asientos sin límites",
+    tableShapeLabel: "Forma de la Mesa",
+    tableCapacityLabel: "Asientos por Mesa",
+    exportList: "Exportar Lista",
+    addTable: "Añadir Mesa",
+    addGuest: "Añadir",
+    guestPlaceholder: "Nombre del Invitado...",
+    seats: "Asientos",
+    seatNum: "Asiento",
+    shapeRound: "Redonda",
+    shapeOval: "Ovalada",
+    shapeSquare: "Cuadrada",
+    shapeRectangle: "Rectangular",
+    realtimePreview: "Simulador Móvil en Tiempo Real",
+    gettingMarried: "Nos Casamos",
+    dateAndTime: "Fecha y Hora",
+    locationHeading: "Ubicación",
+    openMaps: "Abrir en Mapa Exacto",
+    welcomeHeading: "Bienvenida",
+    rsvpTitle: "Confirmación de Asistencia (RSVP)",
+    yourNamePlaceholder: "Tu Nombre Completo",
+    willAttend: "Asistiré ✨",
+    cannotCome: "No Podré Asistir",
+    guestLangSwitch: "Idioma del Invitado:",
+    selectYourName: "Encuentra tu asiento:",
+    findMySeat: "Ver Mi Asiento",
+    yourTable: "Tu Mesa Asignada",
+    paywallTitle: "Desbloquear Premium",
+    paywallSubtitle: "¡Has creado tu evento gratis! Elige un plan para publicar tu sitio web.",
+    instantActivation: "Activación Instantánea",
+    secureCheckout: "Pago Seguro Apple/Google Pay",
+    mostPopular: "Más Popular",
+    activate: "Activar"
+  },
+  de: {
+    appTitle: "Weddify Studio",
+    appSubtitle: "Digitale Einladungs- & Event-Plattform",
+    editorTab: "Einladungs-Editor",
+    seatingTab: "Sitzplan-Planer",
+    storeGuideTab: "App Store Architektur",
+    testSubscribed: "Test-Abo Modus:",
+    unlockFeatures: "Alle Funktionen Freischalten",
+    activePlan: "Aktiver Plan",
+    livePreviewMode: "Live-Vorschau",
+    eventCustomizer: "Event Anpassen",
+    customizerSubtitle: "Erstelle alles kostenlos! Zahle erst, wenn du bereit bist, den Link zu teilen.",
+    publishBtn: "Website Veröffentlichen",
+    copyLinkBtn: "Link Kopieren",
+    copied: "Kopiert!",
+    downloadQrBtn: "QR-Code Herunterladen",
+    themeSection: "Visuelles Thema & Stil",
+    customAccent: "Eigene Farbe:",
+    coupleDetails: "Brautpaar Details",
+    groomLabel: "Name des Bräutigams",
+    brideLabel: "Name der Braut",
+    coverMediaLabel: "Titel-Medien (Foto oder kurzes Video)",
+    mediaTypePhoto: "Foto",
+    mediaTypeVideo: "Video",
+    uploadFileBtn: "Datei Hochladen",
+    presetLibraryBtn: "Vorlagen",
+    dateLocation: "Datum & Ort",
+    dateLabel: "Event-Datum",
+    timeLabel: "Uhrzeit",
+    venueLabel: "Veranstaltungsort",
+    addressLabel: "Adresse / Details",
+    mapUrlLabel: "Google Maps / Waze Standort-Link",
+    mapUrlPlaceholder: "https://maps.google.com/?q=...",
+    storySectionTitle: "Willkommen & Geschichte",
+    welcomeStoryLabel: "Begrüßungstext für Gäste",
+    musicSectionTitle: "Hintergrundmusik",
+    uploadAudioBtn: "MP3-Datei Hochladen",
+    audioUrlLabel: "Oder direkten MP3-Link einfügen",
+    presetMusicTracks: "Vorgefertigte Hochzeits-Tracks",
+    seatingTitle: "Interaktiver Sitzplan",
+    seatingSubtitle: "Tischformen und Sitzplatzkapazitäten ohne Einschränkungen verwalten",
+    tableShapeLabel: "Tischform",
+    tableCapacityLabel: "Sitzplätze pro Tisch",
+    exportList: "Liste Exportieren",
+    addTable: "Tisch Hinzufügen",
+    addGuest: "Hinzufügen",
+    guestPlaceholder: "Vollständiger Name des Gastes...",
+    seats: "Sitzplätze",
+    seatNum: "Platz",
+    shapeRound: "Rund",
+    shapeOval: "Oval",
+    shapeSquare: "Quadratisch",
+    shapeRectangle: "Rechteckig",
+    realtimePreview: "Echtzeit-Mobil-Simulator",
+    gettingMarried: "Wir Heiraten",
+    dateAndTime: "Datum & Uhrzeit",
+    locationHeading: "Veranstaltungsort",
+    openMaps: "Genaue Karte Öffnen",
+    welcomeHeading: "Willkommen",
+    rsvpTitle: "Rückmeldung (RSVP)",
+    yourNamePlaceholder: "Ihr vollständiger Name",
+    willAttend: "Ich komme gerne ✨",
+    cannotCome: "Ich kann nicht kommen",
+    guestLangSwitch: "Sprache des Gastes:",
+    selectYourName: "Finde deinen Sitzplatz:",
+    findMySeat: "Mein Sitzplatz",
+    yourTable: "Dein zugewiesener Tisch",
+    paywallTitle: "Premium Freischalten",
+    paywallSubtitle: "Du hast dein Event kostenlos erstellt! Wähle einen Pass, um die Website zu veröffentlichen.",
+    instantActivation: "Sofortige Aktivierung",
+    secureCheckout: "Sichere Zahlung Apple/Google Pay",
+    mostPopular: "Am Beliebtesten",
+    activate: "Aktivieren"
+  }
+};
+
+const languages = [
+  { code: 'ka', label: 'ქართული', flag: '🇬🇪' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+];
+
+export default function App() {
+  const [appLang, setAppLang] = useState('ka');
+  const [guestLang, setGuestLang] = useState('ka');
+
+  const tApp = translations[appLang] || translations.ka;
+  const tGuest = translations[guestLang] || translations.ka;
+
+  const [activeTab, setActiveTab] = useState('builder'); 
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState(null); 
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [lockedFeatureName, setLockedFeatureName] = useState('');
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  // Invitation Content State
+  const [invitationData, setInvitationData] = useState({
+    groomName: 'გიორგი',
+    brideName: 'მარიამი',
+    eventDate: '2026-09-18',
+    eventTime: '17:00',
+    venueName: 'Garden Hall Batumi',
+    address: 'ბათუმი, რუსთაველის გამზირი #24',
+    mapUrl: 'https://maps.google.com/?q=Batumi+Garden+Hall',
+    story: 'ჩვენი სიყვარულის ისტორია იწყება 2021 წელს...',
+    theme: 'floral', 
+    customColor: '#f43f5e',
+    audioTitle: 'Romantic Wedding Waltz',
+    audioUrl: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-waltz-112340.mp3',
+    musicPlaying: true,
+    mediaType: 'image', 
+    coverUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800',
+  });
+
+  // UNLIMITED Seating Planner State
+  const [tables, setTables] = useState([
+    { 
+      id: 1, 
+      name: 'მაგიდა 1 (ოჯახი)', 
+      shape: 'round', // round, oval, square, rectangle
+      capacity: 12, 
+      guests: ['დედა', 'მამა', 'ბებია', 'პაპა', 'დეიდა ნინო', 'ბიძა დათო', 'გია', 'ეთერი'] 
+    },
+    { 
+      id: 2, 
+      name: 'მაგიდა 2 (მეგობრები)', 
+      shape: 'rectangle', 
+      capacity: 24, 
+      guests: ['ლაშა', 'ანა', 'ნიკო', 'სოფო', 'გიგა', 'მარიამი', 'ირაკლი', 'სალომე', 'თორნიკე', 'თამუნა'] 
+    }
+  ]);
+  const [selectedTableId, setSelectedTableId] = useState(1);
+  const [newGuestName, setNewGuestName] = useState('');
+  const [highlightedGuest, setHighlightedGuest] = useState('');
+  // Added state for directly tapped chair inside the interactive table view
+  const [selectedSeatInfo, setSelectedSeatInfo] = useState(null);
+
+  // Visual Themes List
+  const themes = [
+    { id: 'floral', name: 'Classic Floral', bg: 'bg-rose-50', text: 'text-rose-950', accent: '#f43f5e', cardBg: 'bg-white/85' },
+    { id: 'dark-gold', name: 'Modern Dark Gold', bg: 'bg-slate-950', text: 'text-amber-100', accent: '#f59e0b', cardBg: 'bg-slate-900/90' },
+    { id: 'emerald', name: 'Royal Emerald', bg: 'bg-emerald-950', text: 'text-emerald-100', accent: '#10b981', cardBg: 'bg-emerald-900/90' },
+    { id: 'terracotta', name: 'Sunset Terracotta', bg: 'bg-orange-50', text: 'text-amber-950', accent: '#ea580c', cardBg: 'bg-white/85' },
+    { id: 'midnight', name: 'Midnight Sparkle', bg: 'bg-indigo-950', text: 'text-indigo-100', accent: '#6366f1', cardBg: 'bg-indigo-900/90' },
+    { id: 'lavender', name: 'Soft Lavender', bg: 'bg-purple-50', text: 'text-purple-950', accent: '#a855f7', cardBg: 'bg-white/85' },
+    { id: 'ocean', name: 'Ocean Breeze', bg: 'bg-sky-50', text: 'text-sky-950', accent: '#0284c7', cardBg: 'bg-white/85' },
+    { id: 'crimson', name: 'Crimson Romance', bg: 'bg-red-950', text: 'text-red-100', accent: '#dc2626', cardBg: 'bg-red-900/90' },
+  ];
+
+  const currentThemeObj = themes.find(t => t.id === invitationData.theme) || themes[0];
+  const activeAccent = invitationData.customColor || currentThemeObj.accent;
+
+  // Media Presets
+  const mediaPresets = {
+    image: [
+      'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&q=80&w=800'
+    ],
+    video: [
+      'https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-outdoors-42283-large.mp4',
+      'https://assets.mixkit.co/videos/preview/mixkit-bride-and-groom-kissing-under-the-sun-42285-large.mp4'
+    ]
+  };
+
+  // Music Preset Tracks
+  const presetTracks = [
+    { name: 'Romantic Wedding Waltz', url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-waltz-112340.mp3' },
+    { name: 'Acoustic Love Acoustic', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b98b9409.mp3?filename=acoustic-love-10853.mp3' },
+    { name: 'Piano & Strings Serenade', url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=wedding-piano-18264.mp3' }
+  ];
+
+  // Subscription Plans
+  const plans = [
+    {
+      id: 'week',
+      name: '1-Week Pass',
+      priceGEL: '29 ₾',
+      priceUSD: '$10',
+      duration: '7 Days Access',
+      popular: false,
+      features: [
+        'Full Digital Invitation Site',
+        'Unlimited Guest Views',
+        'Standard RSVP Collector',
+        'Basic QR Code Download'
+      ]
+    },
+    {
+      id: 'month',
+      name: '1-Month Pass',
+      priceGEL: '59 ₾',
+      priceUSD: '$20',
+      duration: '30 Days Access',
+      popular: true,
+      features: [
+        'Everything in 1-Week',
+        'Unlimited Seating Planner (24+ Guests)',
+        'Custom Background Audio Upload',
+        'Custom RSVP Questions',
+        'Direct WhatsApp Invites'
+      ]
+    },
+    {
+      id: 'year',
+      name: '1-Year VIP Pass',
+      priceGEL: '149 ₾',
+      priceUSD: '$50',
+      duration: '365 Days Access',
+      popular: false,
+      features: [
+        'Everything in 1-Month',
+        '1-Year Memory Archive',
+        'High-Res Photo Gallery Uploads',
+        'Priority 24/7 VIP Support',
+        'Personalized Subdomain Link'
+      ]
+    }
+  ];
+
+  const handleProtectedAction = (actionName) => {
+    if (isSubscribed) {
+      if (actionName === 'Copy Link' || actionName === tApp.copyLinkBtn) {
+        navigator.clipboard?.writeText(`https://weddify.ge/invites/${invitationData.groomName.toLowerCase()}-${invitationData.brideName.toLowerCase()}`);
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 3000);
+      } else {
+        alert(`🎉 Success! Action executed: ${actionName}`);
+      }
+    } else {
+      setLockedFeatureName(actionName);
+      setShowPaywall(true);
+    }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const isVid = file.type.startsWith('video/');
+      const fileUrl = URL.createObjectURL(file);
+      setInvitationData({
+        ...invitationData,
+        mediaType: isVid ? 'video' : 'image',
+        coverUrl: fileUrl
+      });
+    }
+  };
+
+  const handleAudioUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setInvitationData({
+        ...invitationData,
+        audioTitle: file.name,
+        audioUrl: fileUrl,
+        musicPlaying: true
+      });
+    }
+  };
+
+  const handleAddTable = () => {
+    const newId = tables.length + 1;
+    const newTable = {
+      id: newId,
+      name: `მაგიდა ${newId}`,
+      shape: 'round',
+      capacity: 12,
+      guests: []
+    };
+    setTables([...tables, newTable]);
+    setSelectedTableId(newId);
+  };
+
+  const updateTableDetail = (tableId, key, value) => {
+    setTables(tables.map(t => t.id === tableId ? { ...t, [key]: value } : t));
+  };
+
+  const handleAddGuest = (e) => {
+    e.preventDefault();
+    if (!newGuestName.trim()) return;
+    setTables(tables.map(t => {
+      if (t.id === selectedTableId) {
+        return { ...t, guests: [...t.guests, newGuestName.trim()] };
+      }
+      return t;
+    }));
+    setNewGuestName('');
+  };
+
+  const removeGuest = (tableId, guestIndex) => {
+    setTables(tables.map(t => {
+      if (t.id === tableId) {
+        const nextGuests = [...t.guests];
+        nextGuests.splice(guestIndex, 1);
+        return { ...t, guests: nextGuests };
+      }
+      return t;
+    }));
+  };
+
+  const removeTable = (tableId) => {
+    if (tables.length <= 1) return;
+    const filtered = tables.filter(t => t.id !== tableId);
+    setTables(filtered);
+    setSelectedTableId(filtered[0].id);
+  };
+
+  // Helper to render table chairs visual layout
+  const renderTableVisual = (shape, capacity, guests = [], isInteractive = false) => {
+    const totalChairs = Math.max(capacity, guests.length || 0);
+    const chairArray = Array.from({ length: totalChairs });
+
+    let shapeClasses = "w-24 h-24 rounded-full";
+    if (shape === 'oval') shapeClasses = "w-32 h-20 rounded-[50px]";
+    if (shape === 'square') shapeClasses = "w-24 h-24 rounded-xl";
+    if (shape === 'rectangle') shapeClasses = "w-36 h-20 rounded-xl";
+
+    return (
+      <div className="relative my-6 flex flex-col items-center justify-center p-4">
+        {/* Table Body */}
+        <div 
+          className={`flex flex-col items-center justify-center border-2 shadow-inner transition-all duration-300 z-10 ${shapeClasses}`}
+          style={{ backgroundColor: `${activeAccent}15`, borderColor: activeAccent }}
+        >
+          <span className="text-[10px] font-bold uppercase tracking-wider text-center px-1" style={{ color: activeAccent }}>
+            {shape}
+          </span>
+          <span className="text-[9px] text-slate-400 font-medium">
+            {guests.length}/{capacity} {tApp.seats}
+          </span>
+        </div>
+
+        {/* Dynamic Chairs rendered around perimeter */}
+        {chairArray.map((_, i) => {
+          const angle = (i / totalChairs) * (2 * Math.PI);
+          const radiusX = shape === 'rectangle' || shape === 'oval' ? 84 : 64;
+          const radiusY = shape === 'oval' ? 52 : shape === 'rectangle' ? 52 : 64;
+          
+          const posX = Math.cos(angle) * radiusX;
+          const posY = Math.sin(angle) * radiusY;
+
+          const guestName = guests[i];
+          const isSelected = highlightedGuest && guestName === highlightedGuest;
+          const isDirectlyTapped = selectedSeatInfo && selectedSeatInfo.seatIndex === i;
+
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                if (isInteractive) {
+                  setSelectedSeatInfo({
+                    seatIndex: i,
+                    seatNumber: i + 1,
+                    guestName: guestName || null
+                  });
+                }
+              }}
+              className={`absolute w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold transition-all duration-200 cursor-pointer ${
+                isDirectlyTapped
+                  ? 'bg-amber-300 text-slate-950 border-amber-400 ring-4 ring-amber-400/50 scale-125 z-30'
+                  : isSelected 
+                    ? 'bg-rose-500 text-white border-rose-400 ring-4 ring-rose-500/40 scale-110 z-20' 
+                    : guestName 
+                      ? 'bg-slate-900 text-amber-300 border-amber-400/80 hover:scale-110' 
+                      : 'bg-slate-800 border-slate-700 text-slate-500 hover:scale-110'
+              }`}
+              style={{
+                transform: `translate(${posX}px, ${posY}px)`
+              }}
+              title={guestName ? `Seat ${i+1}: ${guestName}` : `Seat ${i+1}: Empty`}
+            >
+              {i + 1}
+            </button>
+          );
+        })}
+
+        {/* Floating Tooltip for Tapped Seat Info in Interactive Mode */}
+        {isInteractive && selectedSeatInfo && (
+          <div className="mt-14 bg-slate-900 text-white text-[11px] px-3 py-1.5 rounded-xl border border-amber-400/60 shadow-lg flex items-center space-x-1.5 animate-in fade-in duration-150 z-30">
+            <span className="font-bold text-amber-400">{tApp.seatNum} #{selectedSeatInfo.seatNumber}:</span>
+            <span className="font-medium">
+              {selectedSeatInfo.guestName ? (
+                <span className="text-white">👤 {selectedSeatInfo.guestName}</span>
+              ) : (
+                <span className="text-slate-400 italic">თავისუფალია / Empty</span>
+              )}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans selection:bg-rose-500 selection:text-white">
+      
+      {/* GLOBAL HEADER */}
+      <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-40 px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center shadow-lg shadow-rose-500/20">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <h1 className="font-bold text-lg text-white tracking-wide">{tApp.appTitle}</h1>
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                SaaS Builder
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">{tApp.appSubtitle}</p>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="hidden md:flex items-center space-x-1 bg-slate-900/90 border border-slate-800 p-1 rounded-xl text-sm font-medium">
+          <button
+            onClick={() => setActiveTab('builder')}
+            className={`px-4 py-2 rounded-lg transition ${activeTab === 'builder' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+          >
+            <Sliders className="w-4 h-4 inline mr-2" />
+            {tApp.editorTab}
+          </button>
+          <button
+            onClick={() => setActiveTab('seating')}
+            className={`px-4 py-2 rounded-lg transition ${activeTab === 'seating' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+          >
+            <Users className="w-4 h-4 inline mr-2" />
+            {tApp.seatingTab}
+          </button>
+          <button
+            onClick={() => setActiveTab('store-guide')}
+            className={`px-4 py-2 rounded-lg transition ${activeTab === 'store-guide' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+          >
+            <Smartphone className="w-4 h-4 inline mr-2" />
+            {tApp.storeGuideTab}
+          </button>
+        </div>
+
+        {/* App Language Selector & Subscription Controls */}
+        <div className="flex items-center space-x-3">
+          
+          <div className="flex items-center bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-xl text-xs space-x-1.5">
+            <Languages className="w-4 h-4 text-rose-400" />
+            <select
+              value={appLang}
+              onChange={(e) => setAppLang(e.target.value)}
+              className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer font-medium"
+            >
+              {languages.map((l) => (
+                <option key={l.code} value={l.code} className="bg-slate-900 text-slate-200">
+                  {l.flag} {l.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="hidden sm:flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs">
+            <span className="text-slate-400">{tApp.testSubscribed}</span>
+            <button
+              onClick={() => {
+                setIsSubscribed(!isSubscribed);
+                if (!isSubscribed) setCurrentPlan('month');
+              }}
+              className={`w-9 h-5 flex items-center rounded-full p-1 transition duration-300 ${isSubscribed ? 'bg-emerald-500 justify-end' : 'bg-slate-700 justify-start'}`}
+            >
+              <div className="w-3.5 h-3.5 rounded-full bg-white shadow-md"></div>
+            </button>
+          </div>
+
+          {isSubscribed ? (
+            <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-xl text-xs font-semibold">
+              <Unlock className="w-3.5 h-3.5" />
+              <span>{tApp.activePlan} ({plans.find(p => p.id === currentPlan)?.name || 'Pro'})</span>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                setLockedFeatureName(tApp.publishBtn);
+                setShowPaywall(true);
+              }}
+              className="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition shadow-lg shadow-amber-500/10"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>{tApp.unlockFeatures}</span>
+            </button>
+          )}
+        </div>
+      </header>
+
+      {/* MOBILE NAV TABS */}
+      <div className="md:hidden flex border-b border-slate-800 bg-slate-950 text-xs font-medium">
+        <button
+          onClick={() => setActiveTab('builder')}
+          className={`flex-1 py-3 text-center border-b-2 ${activeTab === 'builder' ? 'border-rose-500 text-white font-semibold' : 'border-transparent text-slate-400'}`}
+        >
+          {tApp.editorTab}
+        </button>
+        <button
+          onClick={() => setActiveTab('seating')}
+          className={`flex-1 py-3 text-center border-b-2 ${activeTab === 'seating' ? 'border-rose-500 text-white font-semibold' : 'border-transparent text-slate-400'}`}
+        >
+          {tApp.seatingTab}
+        </button>
+        <button
+          onClick={() => setActiveTab('store-guide')}
+          className={`flex-1 py-3 text-center border-b-2 ${activeTab === 'store-guide' ? 'border-rose-500 text-white font-semibold' : 'border-transparent text-slate-400'}`}
+        >
+          {tApp.storeGuideTab}
+        </button>
+      </div>
+
+      {/* MAIN CONTAINER */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* LEFT COLUMN: EDITING & CONTROL PANEL (7 cols) */}
+        <div className="lg:col-span-7 space-y-6">
+          
+          {/* TAB 1: BUILDER */}
+          {activeTab === 'builder' && (
+            <div className="space-y-6">
+              
+              {/* Header card with quick actions */}
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 relative overflow-hidden shadow-sm">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold text-white flex items-center space-x-2">
+                      <span>{tApp.eventCustomizer}</span>
+                      <span className="text-xs bg-slate-800 text-slate-300 font-normal px-2.5 py-0.5 rounded-full">
+                        {tApp.livePreviewMode}
+                      </span>
+                    </h2>
+                    <p className="text-slate-400 text-sm mt-1">
+                      {tApp.customizerSubtitle}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800/80">
+                  <button
+                    onClick={() => handleProtectedAction(tApp.publishBtn)}
+                    className="flex items-center justify-center space-x-2 bg-rose-600 hover:bg-rose-700 text-white px-3 py-2.5 rounded-xl font-medium text-xs transition relative group"
+                  >
+                    {!isSubscribed && <Lock className="w-3.5 h-3.5 text-rose-200" />}
+                    <Globe className="w-3.5 h-3.5" />
+                    <span>{tApp.publishBtn}</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleProtectedAction(tApp.copyLinkBtn)}
+                    className="flex items-center justify-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white px-3 py-2.5 rounded-xl font-medium text-xs transition relative"
+                  >
+                    {!isSubscribed && <Lock className="w-3.5 h-3.5 text-amber-400" />}
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>{copiedLink ? tApp.copied : tApp.copyLinkBtn}</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleProtectedAction(tApp.downloadQrBtn)}
+                    className="flex items-center justify-center space-x-2 bg-slate-800 hover:bg-slate-700 text-white px-3 py-2.5 rounded-xl font-medium text-xs transition col-span-2 sm:col-span-1"
+                  >
+                    {!isSubscribed && <Lock className="w-3.5 h-3.5 text-amber-400" />}
+                    <QrCode className="w-3.5 h-3.5" />
+                    <span>{tApp.downloadQrBtn}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Theme & Custom Color Selector */}
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-slate-200 text-sm flex items-center space-x-2">
+                    <Layout className="w-4 h-4 text-rose-400" />
+                    <span>{tApp.themeSection}</span>
+                  </h3>
+                  
+                  <div className="flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs">
+                    <Palette className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-slate-400">{tApp.customAccent}</span>
+                    <input 
+                      type="color" 
+                      value={activeAccent}
+                      onChange={(e) => setInvitationData({ ...invitationData, customColor: e.target.value })}
+                      className="w-5 h-5 rounded cursor-pointer bg-transparent border-0"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {themes.map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => setInvitationData({ ...invitationData, theme: t.id, customColor: '' })}
+                      className={`p-3 rounded-xl border text-left flex flex-col justify-between transition relative overflow-hidden ${
+                        invitationData.theme === t.id 
+                          ? 'border-rose-500 ring-2 ring-rose-500/30 bg-slate-900' 
+                          : 'border-slate-800 bg-slate-900/50 hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="w-4 h-4 rounded-full inline-block border border-black/20" style={{ backgroundColor: t.accent }}></span>
+                        {invitationData.theme === t.id && <Check className="w-3.5 h-3.5 text-rose-400" />}
+                      </div>
+                      <span className="text-xs font-medium text-slate-200">{t.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Couple Information & Cover Media */}
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h3 className="font-semibold text-slate-200 text-sm flex items-center space-x-2">
+                  <Heart className="w-4 h-4 text-rose-400" />
+                  <span>{tApp.coupleDetails}</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.groomLabel}</label>
+                    <input
+                      type="text"
+                      value={invitationData.groomName}
+                      onChange={(e) => setInvitationData({ ...invitationData, groomName: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.brideLabel}</label>
+                    <input
+                      type="text"
+                      value={invitationData.brideName}
+                      onChange={(e) => setInvitationData({ ...invitationData, brideName: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-2 border-t border-slate-900">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-medium text-slate-300">{tApp.coverMediaLabel}</label>
+                    
+                    <div className="flex bg-slate-900 border border-slate-800 p-0.5 rounded-lg text-xs">
+                      <button
+                        onClick={() => setInvitationData({ ...invitationData, mediaType: 'image', coverUrl: mediaPresets.image[0] })}
+                        className={`px-2.5 py-1 rounded-md flex items-center space-x-1.5 transition ${invitationData.mediaType === 'image' ? 'bg-slate-800 text-white font-medium' : 'text-slate-400'}`}
+                      >
+                        <ImageIcon className="w-3 h-3" />
+                        <span>{tApp.mediaTypePhoto}</span>
+                      </button>
+                      <button
+                        onClick={() => setInvitationData({ ...invitationData, mediaType: 'video', coverUrl: mediaPresets.video[0] })}
+                        className={`px-2.5 py-1 rounded-md flex items-center space-x-1.5 transition ${invitationData.mediaType === 'video' ? 'bg-slate-800 text-white font-medium' : 'text-slate-400'}`}
+                      >
+                        <Video className="w-3 h-3" />
+                        <span>{tApp.mediaTypeVideo}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <label className="flex-1 cursor-pointer bg-slate-900 border border-dashed border-slate-700 hover:border-rose-500 rounded-xl px-4 py-3 flex items-center justify-center space-x-2 text-xs text-slate-300 transition">
+                      <Upload className="w-4 h-4 text-rose-400" />
+                      <span>{tApp.uploadFileBtn}</span>
+                      <input 
+                        type="file" 
+                        accept="image/*,video/*" 
+                        onChange={handleFileUpload} 
+                        className="hidden" 
+                      />
+                    </label>
+
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      value={invitationData.coverUrl}
+                      onChange={(e) => setInvitationData({ ...invitationData, coverUrl: e.target.value })}
+                      className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500 font-mono truncate"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Event Time & Location */}
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h3 className="font-semibold text-slate-200 text-sm flex items-center space-x-2">
+                  <Calendar className="w-4 h-4 text-amber-400" />
+                  <span>{tApp.dateLocation}</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.dateLabel}</label>
+                    <input
+                      type="date"
+                      value={invitationData.eventDate}
+                      onChange={(e) => setInvitationData({ ...invitationData, eventDate: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.timeLabel}</label>
+                    <input
+                      type="time"
+                      value={invitationData.eventTime}
+                      onChange={(e) => setInvitationData({ ...invitationData, eventTime: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.venueLabel}</label>
+                  <input
+                    type="text"
+                    value={invitationData.venueName}
+                    onChange={(e) => setInvitationData({ ...invitationData, venueName: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.addressLabel}</label>
+                  <input
+                    type="text"
+                    value={invitationData.address}
+                    onChange={(e) => setInvitationData({ ...invitationData, address: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                  />
+                </div>
+
+                <div className="pt-2 border-t border-slate-900">
+                  <label className="block text-xs font-medium text-amber-400 mb-1 flex items-center space-x-1.5">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>{tApp.mapUrlLabel}</span>
+                  </label>
+                  <input
+                    type="url"
+                    placeholder={tApp.mapUrlPlaceholder}
+                    value={invitationData.mapUrl}
+                    onChange={(e) => setInvitationData({ ...invitationData, mapUrl: e.target.value })}
+                    className="w-full bg-slate-900 border border-amber-500/30 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none transition font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Welcome & Love Story */}
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h3 className="font-semibold text-slate-200 text-sm flex items-center space-x-2">
+                  <Heart className="w-4 h-4 text-purple-400" />
+                  <span>{tApp.storySectionTitle}</span>
+                </h3>
+                <div>
+                  <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.welcomeStoryLabel}</label>
+                  <textarea
+                    rows={3}
+                    value={invitationData.story}
+                    onChange={(e) => setInvitationData({ ...invitationData, story: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-rose-500 transition"
+                  />
+                </div>
+              </div>
+
+              {/* DEDICATED BACKGROUND MUSIC SECTION */}
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h3 className="font-semibold text-slate-200 text-sm flex items-center space-x-2">
+                  <Music className="w-4 h-4 text-rose-400" />
+                  <span>{tApp.musicSectionTitle}</span>
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label className="cursor-pointer bg-slate-900 border border-dashed border-slate-700 hover:border-rose-500 rounded-xl px-4 py-3 flex items-center justify-center space-x-2 text-xs text-slate-300 transition">
+                    <Upload className="w-4 h-4 text-rose-400" />
+                    <span>{tApp.uploadAudioBtn}</span>
+                    <input 
+                      type="file" 
+                      accept="audio/*" 
+                      onChange={handleAudioUpload} 
+                      className="hidden" 
+                    />
+                  </label>
+
+                  <div>
+                    <input
+                      type="text"
+                      placeholder={tApp.audioUrlLabel}
+                      value={invitationData.audioUrl}
+                      onChange={(e) => setInvitationData({ ...invitationData, audioUrl: e.target.value, audioTitle: 'Custom Link Audio' })}
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-3 text-xs text-slate-200 focus:outline-none focus:border-rose-500 font-mono truncate"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-2 border-t border-slate-900">
+                  <label className="block text-xs font-medium text-slate-400">{tApp.presetMusicTracks}:</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {presetTracks.map((track, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setInvitationData({
+                          ...invitationData,
+                          audioTitle: track.name,
+                          audioUrl: track.url,
+                          musicPlaying: true
+                        })}
+                        className={`px-3 py-2 rounded-xl text-left text-xs border transition flex items-center justify-between ${
+                          invitationData.audioUrl === track.url
+                            ? 'bg-rose-500/10 border-rose-500 text-rose-300 font-medium'
+                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        <span className="truncate">{track.name}</span>
+                        {invitationData.audioUrl === track.url && <Check className="w-3.5 h-3.5 ml-1 flex-shrink-0" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          )}
+
+          {/* TAB 2: UNLIMITED SEATING PLANNER WITH CUSTOM SHAPES & UNRESTRICTED CAPACITY */}
+          {activeTab === 'seating' && (
+            <div className="space-y-6">
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-white">{tApp.seatingTitle}</h2>
+                    <p className="text-slate-400 text-xs mt-0.5">{tApp.seatingSubtitle}</p>
+                  </div>
+                  <button
+                    onClick={() => handleProtectedAction(tApp.exportList)}
+                    className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl text-slate-200 transition"
+                  >
+                    {!isSubscribed && <Lock className="w-3 h-3 text-amber-400" />}
+                    <Download className="w-3.5 h-3.5" />
+                    <span>{tApp.exportList}</span>
+                  </button>
+                </div>
+
+                {/* Table selector & creator bar */}
+                <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-4">
+                  {tables.map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => setSelectedTableId(t.id)}
+                      className={`px-3 py-2 rounded-xl text-xs font-medium transition border flex items-center space-x-2 ${
+                        selectedTableId === t.id
+                          ? 'bg-rose-600 border-rose-500 text-white shadow-md'
+                          : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <span>{t.name}</span>
+                      <span className="text-[10px] bg-black/30 px-1.5 py-0.5 rounded-full">{t.guests.length}/{t.capacity}</span>
+                    </button>
+                  ))}
+                  
+                  <button
+                    onClick={handleAddTable}
+                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 flex items-center space-x-1"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>{tApp.addTable}</span>
+                  </button>
+                </div>
+
+                {/* Active Table Configuration Card */}
+                {(() => {
+                  const activeTable = tables.find(t => t.id === selectedTableId) || tables[0];
+                  if (!activeTable) return null;
+
+                  return (
+                    <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 space-y-5">
+                      
+                      {/* Top Controls: Name, Shape & Direct Capacity Input */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        
+                        {/* Name */}
+                        <div>
+                          <label className="block text-xs font-medium text-slate-400 mb-1">მაგიდის დასახელება</label>
+                          <input
+                            type="text"
+                            value={activeTable.name}
+                            onChange={(e) => updateTableDetail(activeTable.id, 'name', e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                          />
+                        </div>
+
+                        {/* Shape Selector */}
+                        <div>
+                          <label className="block text-xs font-medium text-slate-400 mb-1">{tApp.tableShapeLabel}</label>
+                          <select
+                            value={activeTable.shape}
+                            onChange={(e) => updateTableDetail(activeTable.id, 'shape', e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                          >
+                            <option value="round">🔴 {tApp.shapeRound}</option>
+                            <option value="oval">⭕ {tApp.shapeOval}</option>
+                            <option value="square">⬛ {tApp.shapeSquare}</option>
+                            <option value="rectangle">▭ {tApp.shapeRectangle}</option>
+                          </select>
+                        </div>
+
+                        {/* UNRESTRICTED SEAT CAPACITY (DIRECT NUMBER INPUT) */}
+                        <div>
+                          <label className="block text-xs font-medium text-amber-400 mb-1">{tApp.tableCapacityLabel}</label>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => updateTableDetail(activeTable.id, 'capacity', Math.max(1, activeTable.capacity - 1))}
+                              className="w-8 h-8 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-bold hover:bg-slate-800 flex items-center justify-center text-sm"
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              min="1"
+                              max="100"
+                              value={activeTable.capacity}
+                              onChange={(e) => updateTableDetail(activeTable.id, 'capacity', parseInt(e.target.value) || 1)}
+                              className="flex-1 bg-slate-950 border border-amber-500/40 rounded-lg px-2 py-1.5 text-center text-xs font-bold text-white focus:outline-none"
+                            />
+                            <button
+                              onClick={() => updateTableDetail(activeTable.id, 'capacity', activeTable.capacity + 1)}
+                              className="w-8 h-8 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-bold hover:bg-slate-800 flex items-center justify-center text-sm"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Interactive Visual Preview of Table Shape & Chairs */}
+                      <div className="bg-slate-950 border border-slate-800/80 rounded-xl p-4 flex flex-col items-center justify-center min-h-[160px]">
+                        <span className="text-[11px] text-slate-400 font-medium">მაგიდის 2D სქემა ({activeTable.shape}):</span>
+                        {renderTableVisual(activeTable.shape, activeTable.capacity, activeTable.guests)}
+                      </div>
+
+                      {/* Add Guest Form */}
+                      <form onSubmit={handleAddGuest} className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder={tApp.guestPlaceholder}
+                          value={newGuestName}
+                          onChange={(e) => setNewGuestName(e.target.value)}
+                          className="flex-1 bg-slate-950 border border-slate-800 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500"
+                        />
+                        <button
+                          type="submit"
+                          className="bg-rose-600 hover:bg-rose-700 text-white text-xs px-4 py-2 rounded-xl font-medium flex items-center space-x-1"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>{tApp.addGuest}</span>
+                        </button>
+                      </form>
+
+                      {/* Guest List */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-xs text-slate-400 px-1 font-semibold">
+                          <span>სტუმრების სია ({activeTable.guests.length})</span>
+                          {tables.length > 1 && (
+                            <button
+                              onClick={() => removeTable(activeTable.id)}
+                              className="text-rose-400 hover:text-rose-300 text-[11px] flex items-center space-x-1"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              <span>მაგიდის წაშლა</span>
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {activeTable.guests.map((guest, idx) => (
+                            <div key={idx} className="bg-slate-950 px-3 py-2 rounded-xl flex items-center justify-between text-xs text-slate-200 border border-slate-800/60">
+                              <span className="font-medium">{idx + 1}. {guest}</span>
+                              <button
+                                onClick={() => removeGuest(activeTable.id, idx)}
+                                className="text-slate-500 hover:text-rose-400"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })()}
+
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: APP STORE ARCHITECTURE */}
+          {activeTab === 'store-guide' && (
+            <div className="space-y-6">
+              <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div className="flex items-center space-x-3 text-emerald-400">
+                  <Smartphone className="w-6 h-6" />
+                  <h2 className="text-xl font-bold">App Store & Google Play Monetization Architecture</h2>
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  თქვენს მიერ მოთხოვნილი ბიზნეს-მოდელის (Freemium + Demo Lock + Subscriptions) მობილურ აპლიკაციად (App Store / Google Play) გადასაყვანად გამოიყენება შემდეგი ტექნოლოგიური სტეკი:
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <h3 className="font-bold text-amber-400 text-sm flex items-center space-x-2">
+                      <Zap className="w-4 h-4" />
+                      <span>1. Hybrid Mobile Framework</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-normal">
+                      **React Native (Expo)** ან **Flutter** — საშუალებას გაძლევთ იგივე React ლოგიკა გამოიყენოთ მობილურ აპში 100%-ით ნატიური მუშაობისთვის.
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <h3 className="font-bold text-rose-400 text-sm flex items-center space-x-2">
+                      <CreditCard className="w-4 h-4" />
+                      <span>2. Apple & Google In-App Purchases</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-normal">
+                      გამოიყენება **RevenueCat SDK**. ის აკავშირებს Apple IAP (StoreKit) და Google Play Billing-ს ერთიან API-ში.
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <h3 className="font-bold text-purple-400 text-sm flex items-center space-x-2">
+                      <Lock className="w-4 h-4" />
+                      <span>3. Demo Locking Logic</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-normal">
+                      მომხმარებელი ლოკალურად ინახავს ნამუშევარს, ხოლო `publish()` API ამოწმებს `isSubscribed` სტატუსს ბაზაში.
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <h3 className="font-bold text-blue-400 text-sm flex items-center space-x-2">
+                      <Globe className="w-4 h-4" />
+                      <span>4. Dynamic Web Hosting</span>
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-normal">
+                      აპიდან გამოქვეყნებული მოსაწვევი გენერირდება ვებ-ბმულზე (მაგ: `names.weddsite.ge`), რომელსაც სტუმრები ბრაუზერში ხსნიან აპლიკაციის გარეშე.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* RIGHT COLUMN: LIVE MOBILE PHONE SIMULATOR (5 cols) */}
+        <div className="lg:col-span-5 sticky top-24 flex flex-col items-center justify-center">
+          
+          <div className="text-center mb-2 flex items-center justify-between w-[320px]">
+            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
+              <Eye className="w-3.5 h-3.5" style={{ color: activeAccent }} />
+              <span>{tApp.realtimePreview}</span>
+            </span>
+
+            {/* Guest Multi-Language Switcher */}
+            <div className="flex items-center space-x-1 bg-slate-950 border border-slate-800 px-2 py-0.5 rounded-lg text-[11px]">
+              <span className="text-slate-500">{tApp.guestLangSwitch}</span>
+              <select
+                value={guestLang}
+                onChange={(e) => setGuestLang(e.target.value)}
+                className="bg-transparent font-semibold focus:outline-none cursor-pointer"
+                style={{ color: activeAccent }}
+              >
+                {languages.map((l) => (
+                  <option key={l.code} value={l.code} className="bg-slate-900 text-slate-200">
+                    {l.flag} {l.code.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* MOBILE PHONE FRAME */}
+          <div className="w-[320px] h-[640px] bg-slate-950 rounded-[44px] p-3 border-[6px] border-slate-800 shadow-2xl shadow-rose-950/20 relative overflow-hidden flex flex-col">
+            
+            {/* Phone Notch */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-900 rounded-full z-30 flex items-center justify-end px-2">
+              <div className="w-2 h-2 rounded-full bg-slate-800"></div>
+            </div>
+
+            {/* SIMULATED SCREEN INSIDE PHONE */}
+            <div className={`w-full h-full rounded-[34px] overflow-y-auto scrollbar-none transition-colors duration-500 relative ${currentThemeObj.bg} ${currentThemeObj.text}`}>
+              
+              {/* Cover Hero Photo or Video */}
+              <div className="relative h-64 w-full overflow-hidden bg-black">
+                {invitationData.mediaType === 'video' ? (
+                  <video 
+                    src={invitationData.coverUrl} 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img 
+                    src={invitationData.coverUrl} 
+                    alt="Couple Cover" 
+                    className="w-full h-full object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                
+                <div className="absolute bottom-4 left-0 right-0 text-center text-white p-2">
+                  <span className="text-xs uppercase tracking-widest font-medium" style={{ color: activeAccent }}>
+                    {tGuest.gettingMarried}
+                  </span>
+                  <h2 className="text-2xl font-serif font-bold mt-0.5 tracking-wide">
+                    {invitationData.groomName} <span style={{ color: activeAccent }}>&</span> {invitationData.brideName}
+                  </h2>
+                </div>
+              </div>
+
+              {/* DEDICATED AUDIO PLAYER FLOATING INSIDE PREVIEW */}
+              <div className="px-4 py-2 bg-black/10 flex items-center justify-between text-xs border-b border-black/5">
+                <div className="flex items-center space-x-2 truncate">
+                  <Music className={`w-3.5 h-3.5 flex-shrink-0 ${invitationData.musicPlaying ? 'animate-pulse' : ''}`} style={{ color: activeAccent }} />
+                  <span className="font-medium text-[11px] truncate max-w-[150px]">{invitationData.audioTitle}</span>
+                </div>
+                <button 
+                  onClick={() => setInvitationData({ ...invitationData, musicPlaying: !invitationData.musicPlaying })}
+                  className="w-6 h-6 rounded-full text-white flex items-center justify-center text-[10px] shadow-sm flex-shrink-0"
+                  style={{ backgroundColor: activeAccent }}
+                >
+                  {invitationData.musicPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 ml-0.5" />}
+                </button>
+              </div>
+
+              {/* Main Content Area inside phone */}
+              <div className="p-5 space-y-5 text-center">
+                
+                {/* Date Card */}
+                <div className={`p-4 rounded-2xl ${currentThemeObj.cardBg} shadow-sm border border-black/5 space-y-1`}>
+                  <Calendar className="w-5 h-5 mx-auto mb-1" style={{ color: activeAccent }} />
+                  <p className="text-xs uppercase font-semibold text-slate-500">{tGuest.dateAndTime}</p>
+                  <p className="font-bold text-base">{invitationData.eventDate}</p>
+                  <p className="text-xs text-slate-500">at {invitationData.eventTime}</p>
+                </div>
+
+                {/* Venue & Location WITH MAP BUTTON */}
+                <div className={`p-4 rounded-2xl ${currentThemeObj.cardBg} shadow-sm border border-black/5 space-y-1.5`}>
+                  <MapPin className="w-5 h-5 mx-auto mb-1" style={{ color: activeAccent }} />
+                  <p className="text-xs uppercase font-semibold text-slate-500">{tGuest.locationHeading}</p>
+                  <p className="font-bold text-sm">{invitationData.venueName}</p>
+                  <p className="text-xs text-slate-500">{invitationData.address}</p>
+                  
+                  {invitationData.mapUrl && (
+                    <a
+                      href={invitationData.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 text-[11px] text-white px-3.5 py-1.5 rounded-full font-semibold inline-flex items-center space-x-1.5 shadow-sm transition hover:opacity-95"
+                      style={{ backgroundColor: activeAccent }}
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span>{tGuest.openMaps}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+
+                {/* Story */}
+                <div className="space-y-1.5 px-2">
+                  <Heart className="w-4 h-4 mx-auto fill-current" style={{ color: activeAccent }} />
+                  <h4 className="font-serif font-bold text-sm">{tGuest.welcomeHeading}</h4>
+                  <p className="text-xs leading-relaxed text-slate-600 italic">
+                    "{invitationData.story}"
+                  </p>
+                </div>
+
+                {/* GUEST SEATING SELECTION CARD INSIDE PREVIEW */}
+                <div className={`p-4 rounded-2xl ${currentThemeObj.cardBg} shadow-sm border border-black/5 space-y-3 text-left`}>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-center">{tGuest.selectYourName}</h4>
+                  
+                  <select
+                    value={highlightedGuest}
+                    onChange={(e) => {
+                      setHighlightedGuest(e.target.value);
+                      setSelectedSeatInfo(null);
+                    }}
+                    className="w-full text-xs p-2 rounded-lg bg-white/80 border border-slate-300 text-slate-800 font-medium"
+                  >
+                    <option value="">-- {tGuest.findMySeat} --</option>
+                    {tables.flatMap(t => t.guests).map((g, idx) => (
+                      <option key={idx} value={g}>{g}</option>
+                    ))}
+                  </select>
+
+                  {highlightedGuest && (() => {
+                    const foundTable = tables.find(t => t.guests.includes(highlightedGuest));
+                    if (!foundTable) return null;
+
+                    return (
+                      <div className="pt-2 border-t border-slate-200/60 text-center space-y-2">
+                        <span className="text-[11px] font-bold text-slate-700 block">
+                          {tGuest.yourTable}: <span style={{ color: activeAccent }}>{foundTable.name}</span>
+                        </span>
+
+                        <p className="text-[10px] text-slate-500 italic">
+                          💡 დააჭირეთ ნებისმიერ სკამს (1, 2, 3...) სტუმრის სანახავად:
+                        </p>
+
+                        {/* Interactive Table 2D Scheme with Seat Click Listener */}
+                        {renderTableVisual(foundTable.shape, foundTable.capacity, foundTable.guests, true)}
+
+                        <div className="text-[10px] text-slate-500">
+                          გვერდით მჯდომი სტუმრები: {foundTable.guests.filter(g => g !== highlightedGuest).join(', ')}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* RSVP Form Simulation */}
+                <div className={`p-4 rounded-2xl ${currentThemeObj.cardBg} shadow-sm border border-black/5 space-y-3 text-left`}>
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-center">{tGuest.rsvpTitle}</h4>
+                  <input
+                    type="text"
+                    placeholder={tGuest.yourNamePlaceholder}
+                    disabled
+                    className="w-full text-xs p-2 rounded-lg bg-white/60 border border-slate-200 text-slate-800"
+                  />
+                  <div className="flex gap-2">
+                    <button 
+                      className="flex-1 text-white py-1.5 rounded-lg text-xs font-semibold shadow-sm"
+                      style={{ backgroundColor: activeAccent }}
+                    >
+                      {tGuest.willAttend}
+                    </button>
+                    <button className="flex-1 bg-slate-200 text-slate-700 py-1.5 rounded-lg text-xs font-semibold">
+                      {tGuest.cannotCome}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      {/* SUBSCRIPTION & PAYWALL MODAL */}
+      {showPaywall && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full p-6 sm:p-8 relative shadow-2xl space-y-6 my-8 animate-in fade-in zoom-in-95 duration-200">
+            
+            <button
+              onClick={() => setShowPaywall(false)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white bg-slate-800 rounded-full p-2"
+            >
+              ✕
+            </button>
+
+            <div className="text-center space-y-2 max-w-md mx-auto">
+              <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto text-amber-400 mb-1">
+                <Lock className="w-6 h-6" />
+              </div>
+              <h2 className="text-2xl font-bold text-white">
+                {tApp.paywallTitle} {lockedFeatureName || 'Premium'}
+              </h2>
+              <p className="text-slate-400 text-xs sm:text-sm">
+                {tApp.paywallSubtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              {plans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className={`rounded-2xl p-5 border flex flex-col justify-between relative transition duration-200 ${
+                    plan.popular
+                      ? 'bg-gradient-to-b from-slate-800 to-slate-900 border-rose-500 shadow-xl shadow-rose-500/10 ring-1 ring-rose-500'
+                      : 'bg-slate-950 border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  {plan.popular && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-0.5 rounded-full shadow">
+                      {tApp.mostPopular}
+                    </span>
+                  )}
+
+                  <div>
+                    <h3 className="font-bold text-slate-200 text-sm">{plan.name}</h3>
+                    <p className="text-slate-400 text-[11px] mt-0.5">{plan.duration}</p>
+                    
+                    <div className="my-4">
+                      <span className="text-3xl font-extrabold text-white">{plan.priceGEL}</span>
+                      <span className="text-xs text-slate-400 ml-1.5">({plan.priceUSD})</span>
+                    </div>
+
+                    <ul className="space-y-2 mb-6">
+                      {plan.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start text-xs text-slate-300">
+                          <Check className="w-3.5 h-3.5 text-emerald-400 mr-2 flex-shrink-0 mt-0.5" />
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setIsSubscribed(true);
+                      setCurrentPlan(plan.id);
+                      setShowPaywall(false);
+                    }}
+                    className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs transition flex items-center justify-center space-x-2 ${
+                      plan.popular
+                        ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-lg shadow-rose-500/20'
+                        : 'bg-slate-800 hover:bg-slate-700 text-white'
+                    }`}
+                  >
+                    <span>{tApp.activate} {plan.name}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-slate-800/80 pt-4 text-center flex items-center justify-center space-x-4 text-slate-400 text-xs">
+              <span className="flex items-center"><ShieldCheck className="w-4 h-4 text-emerald-400 mr-1" /> {tApp.instantActivation}</span>
+              <span className="flex items-center"><CreditCard className="w-4 h-4 text-blue-400 mr-1" /> {tApp.secureCheckout}</span>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
