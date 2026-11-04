@@ -20,10 +20,9 @@
 
         function App() {
           const [activeTab, setActiveTab] = useState('editor');
-          const [showPaywall, setShowPaywall] = useState(false);
 
           // Event Type State
-          const [eventType, setEventType] = useState("wedding"); // wedding, birthday, baptism, party, corporate
+          const [eventType, setEventType] = useState("wedding");
           const [eventSubtitle, setEventSubtitle] = useState("იქორწინდებიან");
           
           // Event Details State
@@ -38,11 +37,11 @@
           const [bgColor, setBgColor] = useState("#000053");
           const [bgPattern, setBgPattern] = useState("sparkles");
 
-          // YouTube Music State
+          // YouTube Background Audio State
           const [youtubeUrl, setYoutubeUrl] = useState("https://youtu.be/PsFLnpEfemU");
           const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
-          // Seating Planner State
+          // Seating Planner State with Guest Management
           const [tables, setTables] = useState([
             { id: 1, name: "მაგიდა 1 (ოჯახი)", shape: "round", capacity: 12, guests: ["დედა", "მამა", "ბებია", "პაპა", "დეიდა ნინო", "ბიძა დათო", "გია", "ეთერი", "სოფო", "ლევანი", "ნინო", "თაზო"] },
             { id: 2, name: "კოტე", shape: "rectangle", capacity: 8, guests: ["კოტე", "ანო"] },
@@ -52,8 +51,8 @@
           const [guestSearchName, setGuestSearchName] = useState("დეიდა ნინო");
           const [selectedChairIndex, setSelectedChairIndex] = useState(null);
 
-          // Helper to extract YouTube Video ID from any URL format
-          const getYouTubeEmbedUrl = (url) => {
+          // Parse YouTube Embed Audio Only URL
+          const getYouTubeAudioUrl = (url) => {
             if (!url) return "";
             let videoId = "";
             try {
@@ -67,7 +66,7 @@
             } catch (e) {
               console.log("URL parsing error", e);
             }
-            return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1` : "";
+            return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1` : "";
           };
 
           const eventIcons = {
@@ -87,7 +86,7 @@
             for (let tbl of tables) {
               if (tbl.guests && tbl.guests.includes(gName)) return tbl;
             }
-            return tables[0];
+            return tables[0] || { name: "მაგიდა", guests: [], capacity: 8 };
           };
 
           const guestTable = findGuestTable(guestSearchName);
@@ -178,11 +177,11 @@
                     </div>
                   </div>
 
-                  {/* Couple/Person Details */}
+                  {/* Main Details */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">მთავარი ინფორმაცია</h3>
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">სათაურის ტექსტი (მაგ: იქორწინდებიან / იუბილარი)</label>
+                      <label className="text-xs text-slate-400 block mb-1">სათაურის ტექსტი</label>
                       <input 
                         type="text" 
                         value={eventSubtitle} 
@@ -267,7 +266,7 @@
                       <span className="text-xs font-mono text-slate-400">{bgColor}</span>
                     </div>
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">ფონის გაფორმება & ორნამენტები</label>
+                      <label className="text-xs text-slate-400 block mb-1">ფონის ორნამენტები</label>
                       <select 
                         value={bgPattern} 
                         onChange={(e) => setBgPattern(e.target.value)}
@@ -282,7 +281,7 @@
                     </div>
                   </div>
 
-                  {/* YouTube Music Manager */}
+                  {/* YouTube Background Music */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">🎵 YouTube ფონური მუსიკა</h3>
                     <div className="space-y-3">
@@ -300,25 +299,25 @@
                         onClick={() => setIsMusicPlaying(!isMusicPlaying)}
                         className={`w-full py-2.5 rounded-xl text-xs font-bold transition ${isMusicPlaying ? 'bg-pink-600 text-white animate-pulse' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                       >
-                        {isMusicPlaying ? '⏸ მუსიკის გამორთვა' : '▶ მუსიკის ჩართვა (YouTube)'}
+                        {isMusicPlaying ? '⏸ ფონური მუსიკის გამორთვა' : '▶ ფონური მუსიკის ჩართვა'}
                       </button>
                     </div>
                   </div>
 
-                  {/* Seating Planner */}
+                  {/* Seating Planner with Full Guest Editor */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-semibold text-slate-300">🪑 მაგიდების განაწილება</h3>
+                      <h3 className="text-sm font-semibold text-slate-300">🪑 მაგიდებისა და სტუმრების მართვა</h3>
                       <button 
-                        onClick={() => setTables([...tables, { id: tables.length + 1, name: `მაგიდა #${tables.length + 1}`, shape: 'round', capacity: 8, guests: ["ახალი სტუმარი"] }])}
+                        onClick={() => setTables([...tables, { id: Date.now(), name: `მაგიდა #${tables.length + 1}`, shape: 'round', capacity: 8, guests: ["ახალი სტუმარი"] }])}
                         className="px-2.5 py-1 bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium rounded-lg transition"
                       >
                         + მაგიდის დამატება
                       </button>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {tables.map((tbl, idx) => (
-                        <div key={tbl.id} className="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-2">
+                        <div key={tbl.id} className="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-3">
                           <div className="flex justify-between items-center gap-2">
                             <input 
                               type="text" 
@@ -342,15 +341,35 @@
                               <option value="round">მრგვალი</option>
                               <option value="rectangle">მართკუთხედი</option>
                             </select>
-                          </div>
-                          <div className="flex items-center justify-between text-xs text-slate-400">
-                            <span>ადგილები: {tbl.capacity} | სტუმრები: {(tbl.guests || []).length}</span>
                             <button 
                               onClick={() => setTables(tables.filter(t => t.id !== tbl.id))}
-                              className="text-rose-400 hover:text-rose-300 text-[10px]"
+                              className="text-rose-400 hover:text-rose-300 text-xs px-1"
                             >
-                              წაშლა ✕
+                              ✕
                             </button>
+                          </div>
+
+                          {/* Guests String Input */}
+                          <div>
+                            <label className="text-[10px] text-slate-400 block mb-1">
+                              სტუმრების სახელები (გამოყავით მძიმით):
+                            </label>
+                            <textarea
+                              rows="2"
+                              value={(tbl.guests || []).join(", ")}
+                              onChange={(e) => {
+                                const updated = [...tables];
+                                updated[idx].guests = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
+                                setTables(updated);
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-violet-500"
+                              placeholder="მაგ: გიორგი, ნინო, დათო"
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between text-[11px] text-slate-400">
+                            <span>ადგილები: {tbl.capacity}</span>
+                            <span>სტუმრების რაოდენობა: {(tbl.guests || []).length}</span>
                           </div>
                         </div>
                       ))}
@@ -375,14 +394,13 @@
                       </button>
                     </div>
 
-                    {/* YouTube Embedded Audio Player */}
-                    {isMusicPlaying && getYouTubeEmbedUrl(youtubeUrl) && (
-                      <div className="w-full h-12 bg-black shrink-0 border-b border-slate-800">
+                    {/* HIDDEN Background YouTube Audio Player (No Video Display) */}
+                    {isMusicPlaying && getYouTubeAudioUrl(youtubeUrl) && (
+                      <div className="hidden">
                         <iframe 
-                          src={getYouTubeEmbedUrl(youtubeUrl)} 
+                          src={getYouTubeAudioUrl(youtubeUrl)} 
                           allow="autoplay" 
-                          className="w-full h-full" 
-                          title="YouTube Audio Player"
+                          title="Hidden YouTube Audio"
                         ></iframe>
                       </div>
                     )}
@@ -414,7 +432,7 @@
                         </a>
                       </div>
 
-                      {/* Seating Card */}
+                      {/* Interactive Seating Planner Card */}
                       <div className="bg-white/95 backdrop-blur-md p-3 rounded-xl border border-white/60 space-y-3 shadow">
                         <h3 className="text-xs font-bold text-center text-slate-800">🔍 იპოვე შენი ადგილი მაგიდასთან:</h3>
                         
