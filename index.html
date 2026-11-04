@@ -12,7 +12,7 @@
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-slate-950 text-white font-sans overflow-hidden">
+<body class="bg-slate-950 text-white font-sans min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
@@ -35,7 +35,6 @@
           // Background & Styling
           const [bgColor, setBgColor] = useState("#FFF5F5");
           const [bgPattern, setBgPattern] = useState("floral");
-          const [patternOpacity, setPatternOpacity] = useState(25);
 
           // Music State
           const [selectedMusic, setSelectedMusic] = useState("Romantic Wedding Waltz");
@@ -50,7 +49,7 @@
           const [guestSearchName, setGuestSearchName] = useState("დეიდა ნინო");
           const [selectedChairIndex, setSelectedChairIndex] = useState(null);
 
-          // Web Audio Synthesizer for Guaranteed Sound
+          // Audio
           useEffect(() => {
             let audioCtx = null;
             let timer = null;
@@ -102,30 +101,12 @@
               coupleNames: "წყვილის სახელი",
               date: "თარიღი & დრო",
               location: "ადგილმდებარეობა",
-              mapsLink: "Google Maps / Waze ბმული",
               bgColor: "ფონის ფერი",
               bgPattern: "ფონის გაფორმება & ორნამენტები",
               musicSec: "ფონური მუსიკა",
-              seatingSec: "მაგიდების განაწილება (Seating Planner)",
-              tableName: "მაგიდის სახელი",
-              tableShape: "მაგიდის ფორმა",
-              tableCapacity: "ადგილების რაოდენობა",
-              round: "მრგვალი",
-              oval: "ოვალური",
-              square: "ოთხკუთხედი",
-              rectangle: "მართკუთხედი",
-              save: "შენახვა",
-              guestViewTitle: "იპოვე შენი ადგილი მაგიდასთან:",
-              yourTable: "შენი მაგიდა:",
-              tapSeatPrompt: "💡 დააჭირეთ ნებისმიერ სკამს (1, 2, 3...) სტუმრის სანახავად:",
-              seatInfo: "ადგილი",
-              freeSeat: "თავისუფალია",
-              rsvpTitle: "დასწრების დადასტურება (RSVP)",
-              musicPlay: "მუსიკის ჩართვა/შეწყვეტა"
+              seatingSec: "მაგიდების განაწილება (Seating Planner)"
             }
           }[lang] || { title: "Weddify Studio" };
-
-          const currentTable = tables.find(tbl => tbl.id === Number(selectedTableId)) || tables[0];
 
           const findGuestTable = (gName) => {
             for (let tbl of tables) {
@@ -137,32 +118,32 @@
           const guestTable = findGuestTable(guestSearchName);
 
           return (
-            <div className="flex flex-col h-screen w-full bg-slate-950 text-white font-sans overflow-hidden">
+            <div className="flex flex-col min-h-screen w-full bg-slate-950 text-white font-sans">
               {/* Top Header Bar */}
-              <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800">
+              <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-900 border-b border-slate-800 gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center shadow-lg">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center shadow-lg shrink-0">
                     ✨
                   </div>
                   <div>
-                    <h1 className="font-bold text-lg leading-tight flex items-center gap-2">
-                      Weddify Studio <span className="text-xs px-2 py-0.5 bg-violet-500/20 text-violet-400 rounded-full border border-violet-500/30">SAAS BUILDER</span>
+                    <h1 className="font-bold text-base sm:text-lg leading-tight flex items-center gap-2">
+                      Weddify Studio <span className="text-[10px] px-2 py-0.5 bg-violet-500/20 text-violet-400 rounded-full border border-violet-500/30">SAAS BUILDER</span>
                     </h1>
                     <p className="text-xs text-slate-400">{t.title}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   <div className="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
                     <button 
                       onClick={() => setActiveTab('editor')}
-                      className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${activeTab === 'editor' ? 'bg-violet-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${activeTab === 'editor' ? 'bg-violet-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
                     >
                       🛠️ {t.editorBtn}
                     </button>
                     <button 
                       onClick={() => setActiveTab('preview')}
-                      className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${activeTab === 'preview' ? 'bg-violet-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${activeTab === 'preview' ? 'bg-violet-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
                     >
                       📱 {t.previewBtn}
                     </button>
@@ -170,18 +151,18 @@
 
                   <button 
                     onClick={() => setShowPaywall(true)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-pink-500 rounded-xl font-semibold text-sm shadow-lg hover:opacity-90 transition"
+                    className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-pink-500 rounded-xl font-semibold text-xs shadow-lg hover:opacity-90 transition"
                   >
                     <span>🔒</span>
-                    <span>{t.unlockAll}</span>
+                    <span className="hidden sm:inline">{t.unlockAll}</span>
                   </button>
                 </div>
               </header>
 
-              {/* Main Workspace */}
-              <div className="flex flex-1 overflow-hidden">
-                {/* Editor Sidebar */}
-                <div className="w-1/2 border-r border-slate-800 p-6 overflow-y-auto space-y-6 bg-slate-900/50">
+              {/* Main Workspace - Responsive Layout */}
+              <div className="flex flex-col lg:flex-row flex-1">
+                {/* Editor Section */}
+                <div className={`w-full lg:w-1/2 p-4 sm:p-6 space-y-6 bg-slate-900/50 ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}>
                   <h2 className="text-lg font-bold text-violet-400 border-b border-slate-800 pb-2">⚙️ აპლიკაციის კონფიგურაცია</h2>
 
                   {/* Couple & Date */}
@@ -218,7 +199,7 @@
                     </div>
                   </div>
 
-                  {/* Background Styling & Patterns */}
+                  {/* Background Styling */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">🎨 ფონის გაფორმება & ფერი</h3>
                     <div className="flex items-center space-x-3">
@@ -240,8 +221,6 @@
                       >
                         <option value="floral">🌸 ყვავილოვანი დამასკი (Floral Damask)</option>
                         <option value="sparkles">✨ ოქროსფერი ციმციმი (Gold Sparkles)</option>
-                        <option value="lace">🕸️ გეომეტრიული მაქმანი (Geometric Lace)</option>
-                        <option value="hearts">❤️ გულები და ვაზი (Hearts & Vines)</option>
                         <option value="none">ფონის გარეშე (მხოლოდ ფერი)</option>
                       </select>
                     </div>
@@ -258,24 +237,23 @@
                       >
                         <option value="Romantic Wedding Waltz">Romantic Wedding Waltz (Classical)</option>
                         <option value="Georgian Acoustic Love">Georgian Acoustic Love Song</option>
-                        <option value="Violin Serenade">Violin Serenade in Major</option>
                       </select>
                       <button 
                         onClick={() => setIsPlaying(!isPlaying)}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition ${isPlaying ? 'bg-pink-600 text-white animate-pulse' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+                        className={`px-3 py-2 rounded-xl text-xs font-bold transition ${isPlaying ? 'bg-pink-600 text-white animate-pulse' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                       >
                         {isPlaying ? '⏸ შეჩერება' : '▶ ჩართვა'}
                       </button>
                     </div>
                   </div>
 
-                  {/* Seating Planner Config */}
+                  {/* Seating Config */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">🪑 {t.seatingSec}</h3>
                     <div className="space-y-3">
                       {tables.map((tbl, idx) => (
                         <div key={tbl.id} className="bg-slate-800/80 p-3 rounded-xl border border-slate-700 space-y-2">
-                          <div className="flex justify-between items-center">
+                          <div className="flex justify-between items-center gap-2">
                             <input 
                               type="text" 
                               value={tbl.name}
@@ -284,7 +262,7 @@
                                 updated[idx].name = e.target.value;
                                 setTables(updated);
                               }}
-                              className="bg-slate-700 px-2 py-1 rounded text-sm font-semibold w-1/2 border border-slate-600"
+                              className="bg-slate-700 px-2 py-1 rounded text-xs font-semibold w-full border border-slate-600"
                             />
                             <select 
                               value={tbl.shape}
@@ -296,44 +274,8 @@
                               className="bg-slate-700 px-2 py-1 rounded text-xs border border-slate-600"
                             >
                               <option value="round">მრგვალი</option>
-                              <option value="oval">ოვალური</option>
-                              <option value="square">ოთხკუთხედი</option>
                               <option value="rectangle">მართკუთხედი</option>
                             </select>
-                          </div>
-                          <div className="flex items-center justify-between text-xs text-slate-400">
-                            <span>ადგილების რაოდენობა:</span>
-                            <div className="flex items-center space-x-2">
-                              <button 
-                                onClick={() => {
-                                  const updated = [...tables];
-                                  if (updated[idx].capacity > 1) updated[idx].capacity -= 1;
-                                  setTables(updated);
-                                }}
-                                className="bg-slate-700 px-2 py-0.5 rounded text-white font-bold"
-                              >-</button>
-                              <input 
-                                type="number" 
-                                min="1" 
-                                max="50"
-                                value={tbl.capacity}
-                                onChange={(e) => {
-                                  const val = parseInt(e.target.value) || 1;
-                                  const updated = [...tables];
-                                  updated[idx].capacity = val;
-                                  setTables(updated);
-                                }}
-                                className="w-12 text-center bg-slate-700 rounded text-white font-bold py-0.5"
-                              />
-                              <button 
-                                onClick={() => {
-                                  const updated = [...tables];
-                                  updated[idx].capacity += 1;
-                                  setTables(updated);
-                                }}
-                                className="bg-slate-700 px-2 py-0.5 rounded text-white font-bold"
-                              >+</button>
-                            </div>
                           </div>
                         </div>
                       ))}
@@ -341,61 +283,46 @@
                   </div>
                 </div>
 
-                {/* Live Mobile Simulator Preview */}
-                <div className="w-1/2 flex items-center justify-center p-6 bg-slate-950 relative">
-                  <div className="w-[380px] h-[720px] bg-slate-900 rounded-[40px] border-4 border-slate-700 shadow-2xl flex flex-col overflow-hidden relative">
+                {/* Mobile Preview Section */}
+                <div className={`w-full lg:w-1/2 p-4 sm:p-6 bg-slate-950 flex items-center justify-center ${activeTab === 'editor' ? 'hidden lg:flex' : 'flex'}`}>
+                  <div className="w-full max-w-[360px] h-[680px] bg-slate-900 rounded-[36px] border-4 border-slate-700 shadow-2xl flex flex-col overflow-hidden relative">
                     
-                    {/* Phone Notch & Header */}
-                    <div className="bg-slate-900 px-6 py-3 border-b border-slate-800 flex justify-between items-center z-10">
+                    {/* Notch */}
+                    <div className="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center shrink-0">
                       <span className="text-xs font-bold text-pink-400">💍 Weddify Live</span>
-                      <div className="flex items-center space-x-2">
-                        <button 
-                          onClick={() => setIsPlaying(!isPlaying)}
-                          className="px-2 py-1 bg-pink-500/20 text-pink-400 rounded-full text-xs font-bold flex items-center gap-1 border border-pink-500/30"
-                        >
-                          <span>🎵</span> {isPlaying ? 'ჩართულია' : 'მუსიკა'}
-                        </button>
-                      </div>
+                      <button 
+                        onClick={() => setIsPlaying(!isPlaying)}
+                        className="px-2 py-0.5 bg-pink-500/20 text-pink-400 rounded-full text-[10px] font-bold border border-pink-500/30"
+                      >
+                        🎵 {isPlaying ? 'ჩართულია' : 'მუსიკა'}
+                      </button>
                     </div>
 
-                    {/* Mobile Scrollable View */}
+                    {/* Scrollable View */}
                     <div 
-                      className="flex-1 overflow-y-auto p-5 space-y-6 relative"
+                      className="flex-1 overflow-y-auto p-4 space-y-4 relative"
                       style={{ 
                         backgroundColor: bgColor,
                         backgroundImage: bgPattern === 'floral' ? 'radial-gradient(circle, rgba(219,39,119,0.08) 10%, transparent 10%)' : 'none',
                         backgroundSize: '20px 20px'
                       }}
                     >
-                      {/* Couple Header Banner */}
-                      <div className="text-center space-y-2 py-4 bg-white/70 backdrop-blur-md rounded-2xl shadow-sm border border-white/40">
-                        <p className="text-xs uppercase tracking-widest text-pink-600 font-bold">იქორწინდებიან</p>
-                        <h2 className="text-2xl font-serif font-extrabold text-slate-900">{coupleNames}</h2>
-                        <div className="flex justify-center items-center space-x-2 text-xs text-slate-600">
-                          <span>📅 {weddingDate}</span>
-                          <span>•</span>
-                          <span>⏰ {weddingTime}</span>
-                        </div>
+                      {/* Banner */}
+                      <div className="text-center space-y-1 py-3 bg-white/80 backdrop-blur-md rounded-xl border border-white/40 shadow-sm">
+                        <p className="text-[10px] uppercase font-bold text-pink-600">იქორწინდებიან</p>
+                        <h2 className="text-xl font-serif font-extrabold text-slate-900">{coupleNames}</h2>
+                        <p className="text-[11px] text-slate-600">📅 {weddingDate} • ⏰ {weddingTime}</p>
                       </div>
 
-                      {/* Location Card */}
-                      <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/50 space-y-2 text-center">
-                        <p className="text-xs uppercase font-bold text-slate-400">ადგილმდებარეობა</p>
-                        <h3 className="font-bold text-slate-800">{locationName}</h3>
-                        <p className="text-xs text-slate-500">{locationAddress}</p>
-                        <a 
-                          href={googleMapsUrl} 
-                          target="_blank" 
-                          rel="noreferrer"
-                          className="inline-block mt-2 px-4 py-1.5 bg-pink-600 text-white text-xs font-bold rounded-xl shadow hover:bg-pink-700 transition"
-                        >
-                          📍 რუკაზე გახსნა / ნავიგაცია
-                        </a>
+                      {/* Location */}
+                      <div className="bg-white/80 backdrop-blur-md p-3 rounded-xl border border-white/50 space-y-1 text-center">
+                        <h3 className="font-bold text-xs text-slate-800">{locationName}</h3>
+                        <p className="text-[10px] text-slate-500">{locationAddress}</p>
                       </div>
 
-                      {/* Guest Seating Lookup Card */}
-                      <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/60 space-y-4">
-                        <h3 className="text-sm font-bold text-center text-slate-800">🔍 იპოვე შენი ადგილი მაგიდასთან:</h3>
+                      {/* Seating */}
+                      <div className="bg-white/90 backdrop-blur-md p-3 rounded-xl border border-white/60 space-y-3">
+                        <h3 className="text-xs font-bold text-center text-slate-800">🔍 იპოვე შენი ადგილი:</h3>
                         
                         <select 
                           value={guestSearchName}
@@ -405,54 +332,41 @@
                             setSelectedTableId(tFound.id);
                             setSelectedChairIndex(null);
                           }}
-                          className="w-full bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-sm font-medium text-slate-800 focus:outline-none focus:border-pink-500"
+                          className="w-full bg-slate-100 border border-slate-300 rounded-lg px-2 py-1.5 text-xs font-medium text-slate-800 focus:outline-none"
                         >
                           {tables.flatMap(tbl => tbl.guests).map((g, i) => (
                             <option key={i} value={g}>{g}</option>
                           ))}
                         </select>
 
-                        <div className="bg-pink-50/70 p-3 rounded-xl border border-pink-100 text-center space-y-3">
-                          <p className="text-xs font-medium text-slate-600">
+                        <div className="bg-pink-50/70 p-2.5 rounded-lg border border-pink-100 text-center space-y-2">
+                          <p className="text-[11px] font-medium text-slate-600">
                             შენი მაგიდა: <span className="font-bold text-pink-600">{guestTable.name}</span>
                           </p>
 
-                          <p className="text-[11px] text-slate-500 italic">
-                            💡 დააჭირეთ ნებისმიერ სკამს (1, 2, 3...) ქვემოთ მოცემულ სქემაზე:
-                          </p>
-
-                          {/* Interactive Table 2D Layout */}
-                          <div className="relative w-64 h-56 mx-auto flex items-center justify-center bg-white rounded-2xl border border-pink-200 shadow-inner">
-                            <div className={`absolute flex flex-col items-center justify-center p-3 text-center shadow-md bg-pink-100 border border-pink-300 z-10 ${
-                              guestTable.shape === 'round' ? 'w-24 h-24 rounded-full' :
-                              guestTable.shape === 'oval' ? 'w-28 h-20 rounded-full' :
-                              guestTable.shape === 'square' ? 'w-24 h-24 rounded-xl' : 'w-32 h-16 rounded-xl'
-                            }`}>
-                              <span className="text-[10px] uppercase font-bold text-pink-700">{guestTable.shape}</span>
-                              <span className="text-xs font-bold text-slate-800">{guestTable.name.split(' ')[0]}</span>
-                              <span className="text-[9px] text-slate-500">{guestTable.guests.length}/{guestTable.capacity}</span>
+                          <div className="relative w-48 h-48 mx-auto flex items-center justify-center bg-white rounded-xl border border-pink-200 shadow-inner">
+                            <div className="absolute flex flex-col items-center justify-center p-2 text-center bg-pink-100 border border-pink-300 rounded-full w-20 h-20 z-10">
+                              <span className="text-[10px] font-bold text-slate-800">{guestTable.name.split(' ')[0]}</span>
+                              <span className="text-[8px] text-slate-500">{guestTable.guests.length}/{guestTable.capacity}</span>
                             </div>
 
                             {Array.from({ length: guestTable.capacity }).map((_, i) => {
                               const angle = (i * 2 * Math.PI) / guestTable.capacity - Math.PI / 2;
-                              const radius = 80;
+                              const radius = 65;
                               const x = Math.cos(angle) * radius;
                               const y = Math.sin(angle) * radius;
                               const guestNameAtSeat = guestTable.guests[i];
                               const isCurrentGuestSeat = guestNameAtSeat === guestSearchName;
-                              const isSelected = selectedChairIndex === i + 1;
 
                               return (
                                 <button
                                   key={i}
                                   onClick={() => setSelectedChairIndex(i + 1)}
                                   style={{ transform: `translate(${x}px, ${y}px)` }}
-                                  className={`absolute w-7 h-7 rounded-full text-[10px] font-bold flex items-center justify-center shadow transition-all transform hover:scale-110 z-20 ${
+                                  className={`absolute w-6 h-6 rounded-full text-[9px] font-bold flex items-center justify-center shadow z-20 ${
                                     isCurrentGuestSeat ? 'bg-pink-600 text-white ring-2 ring-pink-300' :
-                                    isSelected ? 'bg-amber-500 text-white ring-2 ring-amber-300 scale-110' :
                                     guestNameAtSeat ? 'bg-slate-800 text-white' : 'bg-slate-200 text-slate-600'
                                   }`}
-                                  title={`სკამი #${i+1}: ${guestNameAtSeat || 'თავისუფალია'}`}
                                 >
                                   {i + 1}
                                 </button>
@@ -461,46 +375,11 @@
                           </div>
 
                           {selectedChairIndex !== null && (
-                            <div className="bg-slate-900 text-white p-2.5 rounded-xl text-xs flex items-center justify-between shadow-lg border border-slate-700">
-                              <div className="flex items-center space-x-2">
-                                <span className="px-2 py-0.5 bg-pink-600 text-[10px] rounded font-bold">ადგილი #{selectedChairIndex}</span>
-                                <span className="font-semibold text-pink-200">
-                                  {guestTable.guests[selectedChairIndex - 1] || 'თავისუფალია'}
-                                </span>
-                              </div>
-                              <button 
-                                onClick={() => setSelectedChairIndex(null)}
-                                className="text-slate-400 hover:text-white px-1 text-xs font-bold"
-                              >
-                                ✕
-                              </button>
+                            <div className="bg-slate-900 text-white p-2 rounded-lg text-[10px] flex items-center justify-between">
+                              <span>ადგილი #{selectedChairIndex}: <strong className="text-pink-300">{guestTable.guests[selectedChairIndex - 1] || 'თავისუფალია'}</strong></span>
+                              <button onClick={() => setSelectedChairIndex(null)}>✕</button>
                             </div>
                           )}
-
-                          <div className="text-left bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
-                            <span className="font-semibold text-slate-700 block mb-1">გვერდით მჯდომი სტუმრები:</span>
-                            <p className="text-slate-500 leading-relaxed">
-                              {guestTable.guests.filter(g => g !== guestSearchName).join(', ') || 'არ არიან სხვა სტუმრები'}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* RSVP Form */}
-                      <div className="bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/50 space-y-3">
-                        <h3 className="text-xs uppercase font-bold text-slate-400 text-center">დასწრების დადასტურება (RSVP)</h3>
-                        <input 
-                          type="text" 
-                          placeholder="თქვენი სახელი და გვარი" 
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-pink-500"
-                        />
-                        <div className="grid grid-cols-2 gap-2">
-                          <button className="py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow hover:bg-emerald-700 transition">
-                            მოვალ ✓
-                          </button>
-                          <button className="py-2 bg-rose-600/20 text-rose-600 text-xs font-bold rounded-xl hover:bg-rose-600/30 transition">
-                            ვერ მოვახერხებ ✕
-                          </button>
                         </div>
                       </div>
 
@@ -509,45 +388,17 @@
                 </div>
               </div>
 
-              {/* SaaS Paywall Modal */}
+              {/* Paywall Modal */}
               {showPaywall && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-                  <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-md w-full space-y-6 text-center relative shadow-2xl">
+                  <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full text-center relative space-y-4">
+                    <button onClick={() => setShowPaywall(false)} className="absolute top-3 right-3 text-slate-400">✕</button>
+                    <h3 className="text-lg font-bold">გახსენი სრული პროექტი</h3>
                     <button 
                       onClick={() => setShowPaywall(false)}
-                      className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold"
+                      className="w-full py-2.5 bg-gradient-to-r from-pink-600 to-violet-600 text-white text-xs font-bold rounded-xl"
                     >
-                      ✕
-                    </button>
-                    <div className="w-16 h-16 bg-gradient-to-tr from-amber-400 to-pink-500 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-lg">
-                      👑
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-bold text-white">გახსენი სრული ძალა</h3>
-                      <p className="text-xs text-slate-400">
-                        მიიღე შეუზღუდავი მაგიდები, მორგებული აუდიო ფლეილისტები და გაუშვი აპლიკაცია App Store-სა და Google Play-ში RevenueCat-ის ინტეგრაციით.
-                      </p>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="p-3 bg-slate-800 rounded-2xl border border-slate-700 flex justify-between items-center">
-                        <span className="text-sm font-bold text-white">ყოველთვიური გამოწერა</span>
-                        <span className="text-pink-400 font-extrabold">$19.99 / თვეში</span>
-                      </div>
-                      <div className="p-3 bg-slate-800 rounded-2xl border-2 border-pink-500 flex justify-between items-center relative">
-                        <span className="absolute -top-3 right-3 bg-pink-600 text-[10px] uppercase px-2 py-0.5 rounded-full font-bold text-white">საუკეთესო არჩევანი</span>
-                        <span className="text-sm font-bold text-white">წლიური გამოწერა (SaaS Pro)</span>
-                        <span className="text-pink-400 font-extrabold">$99.99 / წელში</span>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        alert("გამოწერა წარმატებით გააქტიურდა!");
-                        setShowPaywall(false);
-                        setIsSubscribed(true);
-                      }}
-                      className="w-full py-3 bg-gradient-to-r from-pink-600 to-violet-600 text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition"
-                    >
-                      გამოწერის გააქტიურება (RevenueCat)
+                      გააქტიურება
                     </button>
                   </div>
                 </div>
