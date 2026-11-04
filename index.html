@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weddify Studio - Digital Event & Wedding Builder Platform</title>
+    <title>Weddify Studio - Event Builder Platform</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & ReactDOM -->
@@ -22,7 +22,11 @@
           const [activeTab, setActiveTab] = useState('editor');
           const [showPaywall, setShowPaywall] = useState(false);
 
-          // Wedding Details State
+          // Event Type State
+          const [eventType, setEventType] = useState("wedding"); // wedding, birthday, baptism, party, corporate
+          const [eventSubtitle, setEventSubtitle] = useState("იქორწინდებიან");
+          
+          // Event Details State
           const [coupleNames, setCoupleNames] = useState("გიორგი & მარიამი");
           const [weddingDate, setWeddingDate] = useState("2026-09-18");
           const [weddingTime, setWeddingTime] = useState("17:00");
@@ -31,32 +35,52 @@
           const [googleMapsUrl, setGoogleMapsUrl] = useState("https://maps.google.com/?q=Garden+Hall+Batumi");
 
           // Background & Styling
-          const [bgColor, setBgColor] = useState("#FFF5F5");
-          const [bgPattern, setBgPattern] = useState("floral");
+          const [bgColor, setBgColor] = useState("#000053");
+          const [bgPattern, setBgPattern] = useState("sparkles");
 
-          // YouTube Real Music State
-          const [youtubeUrl, setYoutubeUrl] = useState("https://www.youtube.com/watch?v=9bZkp7q19f0");
+          // YouTube Music State
+          const [youtubeUrl, setYoutubeUrl] = useState("https://youtu.be/PsFLnpEfemU");
           const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
           // Seating Planner State
           const [tables, setTables] = useState([
             { id: 1, name: "მაგიდა 1 (ოჯახი)", shape: "round", capacity: 12, guests: ["დედა", "მამა", "ბებია", "პაპა", "დეიდა ნინო", "ბიძა დათო", "გია", "ეთერი", "სოფო", "ლევანი", "ნინო", "თაზო"] },
             { id: 2, name: "კოტე", shape: "rectangle", capacity: 8, guests: ["კოტე", "ანო"] },
-            { id: 3, name: "მაგიდა #3", shape: "round", capacity: 8, guests: ["ნიკა", "სანდრო"] },
-            { id: 4, name: "მაგიდა #4", shape: "round", capacity: 8, guests: ["მარიამი", "ლუკა"] },
-            { id: 5, name: "მაგიდა #5", shape: "round", capacity: 8, guests: ["გიორგი", "თიკა"] },
-            { id: 6, name: "მაგიდა #6", shape: "round", capacity: 8, guests: ["დაჩი", "საბა"] }
+            { id: 3, name: "მაგიდა #3", shape: "round", capacity: 8, guests: ["ნიკა", "სანდრო"] }
           ]);
           
           const [guestSearchName, setGuestSearchName] = useState("დეიდა ნინო");
           const [selectedChairIndex, setSelectedChairIndex] = useState(null);
 
-          // Extract YouTube ID for Embed Audio/Video playback
+          // Helper to extract YouTube Video ID from any URL format
           const getYouTubeEmbedUrl = (url) => {
             if (!url) return "";
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}?autoplay=1` : "";
+            let videoId = "";
+            try {
+              if (url.includes("youtu.be/")) {
+                videoId = url.split("youtu.be/")[1].split("?")[0];
+              } else if (url.includes("watch?v=")) {
+                videoId = url.split("watch?v=")[1].split("&")[0];
+              } else if (url.includes("embed/")) {
+                videoId = url.split("embed/")[1].split("?")[0];
+              }
+            } catch (e) {
+              console.log("URL parsing error", e);
+            }
+            return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1` : "";
+          };
+
+          const eventIcons = {
+            wedding: { icon: "💍", label: "ქორწილი", defaultSubtitle: "იქორწინდებიან" },
+            birthday: { icon: "🎂", label: "დაბადების დღე", defaultSubtitle: "გეპატიჟებით დაბადების დღეზე" },
+            baptism: { icon: "✝️", label: "ნათლობა", defaultSubtitle: "გეპატიჟებით ნათლობაზე" },
+            party: { icon: "🥳", label: "წვეულება", defaultSubtitle: "PARTY INVITATION" },
+            corporate: { icon: "🥂", label: "კორპორატიული", defaultSubtitle: "კორპორატიული ღონისძიება" }
+          };
+
+          const handleEventTypeChange = (type) => {
+            setEventType(type);
+            setEventSubtitle(eventIcons[type].defaultSubtitle);
           };
 
           const findGuestTable = (gName) => {
@@ -68,30 +92,29 @@
 
           const guestTable = findGuestTable(guestSearchName);
 
-          // Dynamic background pattern CSS generator
           const getPatternStyle = () => {
             if (bgPattern === 'floral') {
               return {
                 backgroundColor: bgColor,
-                backgroundImage: 'radial-gradient(circle, rgba(219,39,119,0.15) 15%, transparent 15%)',
+                backgroundImage: 'radial-gradient(circle, rgba(219,39,119,0.2) 15%, transparent 15%)',
                 backgroundSize: '24px 24px'
               };
             } else if (bgPattern === 'sparkles') {
               return {
                 backgroundColor: bgColor,
-                backgroundImage: 'radial-gradient(ellipse at center, rgba(234,179,8,0.25) 0%, transparent 70%)',
+                backgroundImage: 'radial-gradient(ellipse at center, rgba(234,179,8,0.3) 0%, transparent 70%)',
                 backgroundSize: '30px 30px'
               };
             } else if (bgPattern === 'lace') {
               return {
                 backgroundColor: bgColor,
-                backgroundImage: 'linear-gradient(45deg, rgba(100,116,139,0.1) 25%, transparent 25%), linear-gradient(-45deg, rgba(100,116,139,0.1) 25%, transparent 25%)',
+                backgroundImage: 'linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%)',
                 backgroundSize: '20px 20px'
               };
             } else if (bgPattern === 'hearts') {
               return {
                 backgroundColor: bgColor,
-                backgroundImage: 'radial-gradient(circle, rgba(225,29,72,0.15) 20%, transparent 20%)',
+                backgroundImage: 'radial-gradient(circle, rgba(225,29,72,0.25) 20%, transparent 20%)',
                 backgroundSize: '28px 28px'
               };
             }
@@ -100,11 +123,11 @@
 
           return (
             <div className="flex flex-col min-h-screen w-full bg-slate-950 text-white font-sans">
-              {/* Top Header Bar */}
+              {/* Header */}
               <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-900 border-b border-slate-800 gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center shadow-lg shrink-0">
-                    ✨
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center shadow-lg shrink-0 text-xl">
+                    {eventIcons[eventType].icon}
                   </div>
                   <div>
                     <h1 className="font-bold text-base sm:text-lg leading-tight flex items-center gap-2">
@@ -129,28 +152,46 @@
                       📱 მობილურის პრევიუ
                     </button>
                   </div>
-
-                  <button 
-                    onClick={() => setShowPaywall(true)}
-                    className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-pink-500 rounded-xl font-semibold text-xs shadow-lg hover:opacity-90 transition"
-                  >
-                    <span>🔒</span>
-                    <span>ყველა ფუნქცია</span>
-                  </button>
                 </div>
               </header>
 
-              {/* Main Workspace */}
+              {/* Workspace */}
               <div className="flex flex-col lg:flex-row flex-1">
-                {/* Editor Section */}
+                {/* Editor */}
                 <div className={`w-full lg:w-1/2 p-4 sm:p-6 space-y-6 bg-slate-900/50 ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}>
                   <h2 className="text-lg font-bold text-violet-400 border-b border-slate-800 pb-2">⚙️ აპლიკაციის კონფიგურაცია</h2>
 
-                  {/* Couple & Date */}
+                  {/* Event Type Config */}
+                  <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
+                    <h3 className="text-sm font-semibold text-slate-300">🎉 ღონისძიების ტიპი</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {Object.keys(eventIcons).map((key) => (
+                        <button
+                          key={key}
+                          onClick={() => handleEventTypeChange(key)}
+                          className={`p-2.5 rounded-xl border text-xs font-bold flex items-center space-x-2 transition ${eventType === key ? 'bg-violet-600 border-violet-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}`}
+                        >
+                          <span>{eventIcons[key].icon}</span>
+                          <span>{eventIcons[key].label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Couple/Person Details */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">მთავარი ინფორმაცია</h3>
                     <div>
-                      <label className="text-xs text-slate-400 block mb-1">წყვილის სახელი</label>
+                      <label className="text-xs text-slate-400 block mb-1">სათაურის ტექსტი (მაგ: იქორწინდებიან / იუბილარი)</label>
+                      <input 
+                        type="text" 
+                        value={eventSubtitle} 
+                        onChange={(e) => setEventSubtitle(e.target.value)}
+                        className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-500 mb-3" 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-400 block mb-1">სახელი / წყვილის სახელი</label>
                       <input 
                         type="text" 
                         value={coupleNames} 
@@ -158,7 +199,7 @@
                         className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-500" 
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-3 mt-3">
                       <div>
                         <label className="text-xs text-slate-400 block mb-1">თარიღი</label>
                         <input 
@@ -232,8 +273,8 @@
                         onChange={(e) => setBgPattern(e.target.value)}
                         className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-500"
                       >
-                        <option value="floral">🌸 ყვავილოვანი დამასკი (Floral Damask)</option>
                         <option value="sparkles">✨ ოქროსფერი ციმციმი (Gold Sparkles)</option>
+                        <option value="floral">🌸 ყვავილოვანი დამასკი (Floral Damask)</option>
                         <option value="lace">🕸️ გეომეტრიული მაქმანი (Geometric Lace)</option>
                         <option value="hearts">❤️ გულები და ვაზი (Hearts & Vines)</option>
                         <option value="none">ფონის გარეშე (მხოლოდ ფერი)</option>
@@ -241,17 +282,17 @@
                     </div>
                   </div>
 
-                  {/* YouTube Real Music Player Config */}
+                  {/* YouTube Music Manager */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">🎵 YouTube ფონური მუსიკა</h3>
                     <div className="space-y-3">
                       <div>
-                        <label className="text-xs text-slate-400 block mb-1">YouTube სიმღერის ლინკი</label>
+                        <label className="text-xs text-slate-400 block mb-1">YouTube სიმღერის ბმული</label>
                         <input 
                           type="text" 
                           value={youtubeUrl} 
                           onChange={(e) => setYoutubeUrl(e.target.value)}
-                          placeholder="https://www.youtube.com/watch?v=..."
+                          placeholder="https://youtu.be/..."
                           className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-500" 
                         />
                       </div>
@@ -264,10 +305,10 @@
                     </div>
                   </div>
 
-                  {/* Seating Planner Config */}
+                  {/* Seating Planner */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <div className="flex justify-between items-center">
-                      <h3 className="text-sm font-semibold text-slate-300">🪑 მაგიდების განაწილება (Seating Planner)</h3>
+                      <h3 className="text-sm font-semibold text-slate-300">🪑 მაგიდების განაწილება</h3>
                       <button 
                         onClick={() => setTables([...tables, { id: tables.length + 1, name: `მაგიდა #${tables.length + 1}`, shape: 'round', capacity: 8, guests: ["ახალი სტუმარი"] }])}
                         className="px-2.5 py-1 bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium rounded-lg transition"
@@ -299,8 +340,6 @@
                               className="bg-slate-700 px-2 py-1 rounded text-xs border border-slate-600"
                             >
                               <option value="round">მრგვალი</option>
-                              <option value="oval">ოვალური</option>
-                              <option value="square">ოთხკუთხედი</option>
                               <option value="rectangle">მართკუთხედი</option>
                             </select>
                           </div>
@@ -319,13 +358,15 @@
                   </div>
                 </div>
 
-                {/* Mobile Preview Section */}
+                {/* Mobile Preview */}
                 <div className={`w-full lg:w-1/2 p-4 sm:p-6 bg-slate-950 flex items-center justify-center ${activeTab === 'editor' ? 'hidden lg:flex' : 'flex'}`}>
                   <div className="w-full max-w-[360px] h-[680px] bg-slate-900 rounded-[36px] border-4 border-slate-700 shadow-2xl flex flex-col overflow-hidden relative">
                     
-                    {/* Notch & Header */}
+                    {/* Header Bar */}
                     <div className="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center shrink-0 z-20">
-                      <span className="text-xs font-bold text-pink-400">💍 Weddify Live</span>
+                      <span className="text-xs font-bold text-pink-400 flex items-center gap-1">
+                        <span>{eventIcons[eventType].icon}</span> Weddify Live
+                      </span>
                       <button 
                         onClick={() => setIsMusicPlaying(!isMusicPlaying)}
                         className="px-2 py-0.5 bg-pink-500/20 text-pink-400 rounded-full text-[10px] font-bold border border-pink-500/30"
@@ -334,21 +375,26 @@
                       </button>
                     </div>
 
-                    {/* Hidden/Visible YouTube Audio Player iframe */}
-                    {isMusicPlaying && youtubeUrl && (
-                      <div className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden">
-                        <iframe src={getYouTubeEmbedUrl(youtubeUrl)} allow="autoplay" width="100" height="100"></iframe>
+                    {/* YouTube Embedded Audio Player */}
+                    {isMusicPlaying && getYouTubeEmbedUrl(youtubeUrl) && (
+                      <div className="w-full h-12 bg-black shrink-0 border-b border-slate-800">
+                        <iframe 
+                          src={getYouTubeEmbedUrl(youtubeUrl)} 
+                          allow="autoplay" 
+                          className="w-full h-full" 
+                          title="YouTube Audio Player"
+                        ></iframe>
                       </div>
                     )}
 
-                    {/* Scrollable View with Fixed Patterns */}
+                    {/* Content View */}
                     <div 
                       className="flex-1 overflow-y-auto p-4 space-y-4 relative z-10"
                       style={getPatternStyle()}
                     >
-                      {/* Banner */}
+                      {/* Banner Card */}
                       <div className="text-center space-y-1 py-3 bg-white/90 backdrop-blur-md rounded-xl border border-white/50 shadow-sm">
-                        <p className="text-[10px] uppercase font-bold text-pink-600">იქორწინდებიან</p>
+                        <p className="text-[10px] uppercase font-bold text-pink-600">{eventSubtitle}</p>
                         <h2 className="text-xl font-serif font-extrabold text-slate-900">{coupleNames}</h2>
                         <p className="text-[11px] text-slate-600">📅 {weddingDate} • ⏰ {weddingTime}</p>
                       </div>
@@ -368,7 +414,7 @@
                         </a>
                       </div>
 
-                      {/* Fully Synchronized Seating Planner Preview */}
+                      {/* Seating Card */}
                       <div className="bg-white/95 backdrop-blur-md p-3 rounded-xl border border-white/60 space-y-3 shadow">
                         <h3 className="text-xs font-bold text-center text-slate-800">🔍 იპოვე შენი ადგილი მაგიდასთან:</h3>
                         
@@ -433,23 +479,6 @@
                   </div>
                 </div>
               </div>
-
-              {/* Paywall Modal */}
-              {showPaywall && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-                  <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-sm w-full text-center relative space-y-4">
-                    <button onClick={() => setShowPaywall(false)} className="absolute top-3 right-3 text-slate-400">✕</button>
-                    <h3 className="text-lg font-bold">გახსენი სრული პროექტი</h3>
-                    <p className="text-xs text-slate-400">მიიღე შეუზღუდავი მაგიდები და YouTube აუდიო სტრიმინგი.</p>
-                    <button 
-                      onClick={() => setShowPaywall(false)}
-                      className="w-full py-2.5 bg-gradient-to-r from-pink-600 to-violet-600 text-white text-xs font-bold rounded-xl"
-                    >
-                      გააქტიურება
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           );
         }
