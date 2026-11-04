@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weddify Studio - Event Builder Platform</title>
+    <title>Weddify Studio - Digital Event Builder Platform</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & ReactDOM -->
@@ -11,6 +11,15 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      @keyframes pulse-amber {
+        0%, 100% { transform: scale(1.1); box-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
+        50% { transform: scale(1.25); box-shadow: 0 0 20px rgba(245, 158, 11, 1); }
+      }
+      .animate-chair-selected {
+        animation: pulse-amber 1.5s infinite ease-in-out;
+      }
+    </style>
 </head>
 <body class="bg-slate-950 text-white font-sans min-h-screen">
     <div id="root"></div>
@@ -21,11 +30,9 @@
         function App() {
           const [activeTab, setActiveTab] = useState('editor');
 
-          // Event Type State
+          // Event Details State
           const [eventType, setEventType] = useState("wedding");
           const [eventSubtitle, setEventSubtitle] = useState("იქორწინდებიან");
-          
-          // Event Details State
           const [coupleNames, setCoupleNames] = useState("გიორგი & მარიამი");
           const [weddingDate, setWeddingDate] = useState("2026-09-18");
           const [weddingTime, setWeddingTime] = useState("17:00");
@@ -33,15 +40,15 @@
           const [locationAddress, setLocationAddress] = useState("ბათუმი, რუსთაველის გამზირი #24");
           const [googleMapsUrl, setGoogleMapsUrl] = useState("https://maps.google.com/?q=Garden+Hall+Batumi");
 
-          // Background & Styling
+          // Styling State
           const [bgColor, setBgColor] = useState("#000053");
           const [bgPattern, setBgPattern] = useState("sparkles");
 
-          // YouTube Background Audio State
+          // Audio State
           const [youtubeUrl, setYoutubeUrl] = useState("https://youtu.be/PsFLnpEfemU");
           const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
-          // Seating Planner State with Guest Management
+          // Seating Planner State
           const [tables, setTables] = useState([
             { id: 1, name: "მაგიდა 1 (ოჯახი)", shape: "round", capacity: 12, guests: ["დედა", "მამა", "ბებია", "პაპა", "დეიდა ნინო", "ბიძა დათო", "გია", "ეთერი", "სოფო", "ლევანი", "ნინო", "თაზო"] },
             { id: 2, name: "კოტე", shape: "rectangle", capacity: 8, guests: ["კოტე", "ანო"] },
@@ -51,7 +58,6 @@
           const [guestSearchName, setGuestSearchName] = useState("დეიდა ნინო");
           const [selectedChairIndex, setSelectedChairIndex] = useState(null);
 
-          // Parse YouTube Embed Audio Only URL
           const getYouTubeAudioUrl = (url) => {
             if (!url) return "";
             let videoId = "";
@@ -64,7 +70,7 @@
                 videoId = url.split("embed/")[1].split("?")[0];
               }
             } catch (e) {
-              console.log("URL parsing error", e);
+              console.log("Parsing error", e);
             }
             return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1` : "";
           };
@@ -73,8 +79,7 @@
             wedding: { icon: "💍", label: "ქორწილი", defaultSubtitle: "იქორწინდებიან" },
             birthday: { icon: "🎂", label: "დაბადების დღე", defaultSubtitle: "გეპატიჟებით დაბადების დღეზე" },
             baptism: { icon: "✝️", label: "ნათლობა", defaultSubtitle: "გეპატიჟებით ნათლობაზე" },
-            party: { icon: "🥳", label: "წვეულება", defaultSubtitle: "PARTY INVITATION" },
-            corporate: { icon: "🥂", label: "კორპორატიული", defaultSubtitle: "კორპორატიული ღონისძიება" }
+            party: { icon: "🥳", label: "წვეულება", defaultSubtitle: "PARTY INVITATION" }
           };
 
           const handleEventTypeChange = (type) => {
@@ -110,22 +115,16 @@
                 backgroundImage: 'linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%)',
                 backgroundSize: '20px 20px'
               };
-            } else if (bgPattern === 'hearts') {
-              return {
-                backgroundColor: bgColor,
-                backgroundImage: 'radial-gradient(circle, rgba(225,29,72,0.25) 20%, transparent 20%)',
-                backgroundSize: '28px 28px'
-              };
             }
             return { backgroundColor: bgColor };
           };
 
           return (
             <div className="flex flex-col min-h-screen w-full bg-slate-950 text-white font-sans">
-              {/* Header */}
+              {/* Top Bar */}
               <header className="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-900 border-b border-slate-800 gap-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center shadow-lg shrink-0 text-xl">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-violet-600 flex items-center justify-center shadow-lg text-xl">
                     {eventIcons[eventType].icon}
                   </div>
                   <div>
@@ -154,21 +153,21 @@
                 </div>
               </header>
 
-              {/* Workspace */}
+              {/* Main Workspace */}
               <div className="flex flex-col lg:flex-row flex-1">
-                {/* Editor */}
+                {/* Editor Panel */}
                 <div className={`w-full lg:w-1/2 p-4 sm:p-6 space-y-6 bg-slate-900/50 ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}>
                   <h2 className="text-lg font-bold text-violet-400 border-b border-slate-800 pb-2">⚙️ აპლიკაციის კონფიგურაცია</h2>
 
-                  {/* Event Type Config */}
+                  {/* Event Type */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">🎉 ღონისძიების ტიპი</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {Object.keys(eventIcons).map((key) => (
                         <button
                           key={key}
                           onClick={() => handleEventTypeChange(key)}
-                          className={`p-2.5 rounded-xl border text-xs font-bold flex items-center space-x-2 transition ${eventType === key ? 'bg-violet-600 border-violet-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}`}
+                          className={`p-2 rounded-xl border text-xs font-bold flex items-center justify-center space-x-1.5 transition ${eventType === key ? 'bg-violet-600 border-violet-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}`}
                         >
                           <span>{eventIcons[key].icon}</span>
                           <span>{eventIcons[key].label}</span>
@@ -177,7 +176,7 @@
                     </div>
                   </div>
 
-                  {/* Main Details */}
+                  {/* General Info */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">მთავარი ინფორმაცია</h3>
                     <div>
@@ -220,7 +219,7 @@
                     </div>
                   </div>
 
-                  {/* Location & Maps */}
+                  {/* Location & Map */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">📍 ადგილმდებარეობა & რუკა</h3>
                     <div>
@@ -275,13 +274,12 @@
                         <option value="sparkles">✨ ოქროსფერი ციმციმი (Gold Sparkles)</option>
                         <option value="floral">🌸 ყვავილოვანი დამასკი (Floral Damask)</option>
                         <option value="lace">🕸️ გეომეტრიული მაქმანი (Geometric Lace)</option>
-                        <option value="hearts">❤️ გულები და ვაზი (Hearts & Vines)</option>
                         <option value="none">ფონის გარეშე (მხოლოდ ფერი)</option>
                       </select>
                     </div>
                   </div>
 
-                  {/* YouTube Background Music */}
+                  {/* Music */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <h3 className="text-sm font-semibold text-slate-300">🎵 YouTube ფონური მუსიკა</h3>
                     <div className="space-y-3">
@@ -304,7 +302,7 @@
                     </div>
                   </div>
 
-                  {/* Seating Planner with Full Guest Editor */}
+                  {/* Seating Config */}
                   <div className="space-y-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <div className="flex justify-between items-center">
                       <h3 className="text-sm font-semibold text-slate-300">🪑 მაგიდებისა და სტუმრების მართვა</h3>
@@ -349,7 +347,6 @@
                             </button>
                           </div>
 
-                          {/* Guests String Input */}
                           <div>
                             <label className="text-[10px] text-slate-400 block mb-1">
                               სტუმრების სახელები (გამოყავით მძიმით):
@@ -366,22 +363,17 @@
                               placeholder="მაგ: გიორგი, ნინო, დათო"
                             />
                           </div>
-
-                          <div className="flex items-center justify-between text-[11px] text-slate-400">
-                            <span>ადგილები: {tbl.capacity}</span>
-                            <span>სტუმრების რაოდენობა: {(tbl.guests || []).length}</span>
-                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Mobile Preview */}
+                {/* Mobile Preview View */}
                 <div className={`w-full lg:w-1/2 p-4 sm:p-6 bg-slate-950 flex items-center justify-center ${activeTab === 'editor' ? 'hidden lg:flex' : 'flex'}`}>
                   <div className="w-full max-w-[360px] h-[680px] bg-slate-900 rounded-[36px] border-4 border-slate-700 shadow-2xl flex flex-col overflow-hidden relative">
                     
-                    {/* Header Bar */}
+                    {/* Header */}
                     <div className="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center shrink-0 z-20">
                       <span className="text-xs font-bold text-pink-400 flex items-center gap-1">
                         <span>{eventIcons[eventType].icon}</span> Weddify Live
@@ -394,18 +386,18 @@
                       </button>
                     </div>
 
-                    {/* HIDDEN Background YouTube Audio Player (No Video Display) */}
+                    {/* Hidden YouTube Background Audio Player */}
                     {isMusicPlaying && getYouTubeAudioUrl(youtubeUrl) && (
                       <div className="hidden">
                         <iframe 
                           src={getYouTubeAudioUrl(youtubeUrl)} 
                           allow="autoplay" 
-                          title="Hidden YouTube Audio"
+                          title="Hidden Audio"
                         ></iframe>
                       </div>
                     )}
 
-                    {/* Content View */}
+                    {/* Preview Scroll Area */}
                     <div 
                       className="flex-1 overflow-y-auto p-4 space-y-4 relative z-10"
                       style={getPatternStyle()}
@@ -432,7 +424,7 @@
                         </a>
                       </div>
 
-                      {/* Interactive Seating Planner Card */}
+                      {/* Interactive Seating Planner Card with Visual Tooltip & Animation */}
                       <div className="bg-white/95 backdrop-blur-md p-3 rounded-xl border border-white/60 space-y-3 shadow">
                         <h3 className="text-xs font-bold text-center text-slate-800">🔍 იპოვე შენი ადგილი მაგიდასთან:</h3>
                         
@@ -454,12 +446,14 @@
                             შენი მაგიდა: <span className="font-bold text-pink-600">{guestTable.name}</span>
                           </p>
 
+                          {/* Interactive 2D Table */}
                           <div className="relative w-48 h-48 mx-auto flex items-center justify-center bg-white rounded-xl border border-pink-200 shadow-inner">
                             <div className="absolute flex flex-col items-center justify-center p-2 text-center bg-pink-100 border border-pink-300 rounded-full w-20 h-20 z-10">
                               <span className="text-[10px] font-bold text-slate-800">{guestTable.name.split(' ')[0]}</span>
                               <span className="text-[8px] text-slate-500">{(guestTable.guests || []).length}/{guestTable.capacity}</span>
                             </div>
 
+                            {/* Chairs with Animated Selection */}
                             {Array.from({ length: guestTable.capacity }).map((_, i) => {
                               const angle = (i * 2 * Math.PI) / guestTable.capacity - Math.PI / 2;
                               const radius = 65;
@@ -467,15 +461,21 @@
                               const y = Math.sin(angle) * radius;
                               const guestNameAtSeat = (guestTable.guests || [])[i];
                               const isCurrentGuestSeat = guestNameAtSeat === guestSearchName;
+                              const isSelectedChair = selectedChairIndex === i + 1;
 
                               return (
                                 <button
                                   key={i}
                                   onClick={() => setSelectedChairIndex(i + 1)}
                                   style={{ transform: `translate(${x}px, ${y}px)` }}
-                                  className={`absolute w-6 h-6 rounded-full text-[9px] font-bold flex items-center justify-center shadow z-20 ${
-                                    isCurrentGuestSeat ? 'bg-pink-600 text-white ring-2 ring-pink-300' :
-                                    guestNameAtSeat ? 'bg-slate-800 text-white' : 'bg-slate-200 text-slate-600'
+                                  className={`absolute w-6 h-6 rounded-full text-[9px] font-bold flex items-center justify-center shadow transition-all duration-300 z-20 ${
+                                    isSelectedChair 
+                                      ? 'bg-amber-400 text-slate-900 ring-4 ring-amber-300 animate-chair-selected z-30'
+                                      : isCurrentGuestSeat 
+                                      ? 'bg-pink-600 text-white ring-2 ring-pink-300' 
+                                      : guestNameAtSeat 
+                                      ? 'bg-slate-800 text-white hover:bg-slate-700' 
+                                      : 'bg-slate-200 text-slate-600'
                                   }`}
                                 >
                                   {i + 1}
@@ -484,10 +484,23 @@
                             })}
                           </div>
 
+                          {/* Dynamic Visual Tooltip / Card for Selected Seat */}
                           {selectedChairIndex !== null && (
-                            <div className="bg-slate-900 text-white p-2 rounded-lg text-[10px] flex items-center justify-between">
-                              <span>ადგილი #{selectedChairIndex}: <strong className="text-pink-300">{(guestTable.guests || [])[selectedChairIndex - 1] || 'თავისუფალია'}</strong></span>
-                              <button onClick={() => setSelectedChairIndex(null)}>✕</button>
+                            <div className="bg-slate-900 text-white p-2.5 rounded-xl text-[11px] flex items-center justify-between shadow-lg border border-slate-700 animate-fade-in mt-2">
+                              <div className="flex items-center space-x-2">
+                                <span className="px-2 py-0.5 bg-amber-500 text-slate-950 font-bold rounded text-[10px]">ადგილი {selectedChairIndex}</span>
+                                <span className="font-semibold text-amber-200">
+                                  {(guestTable.guests || [])[selectedChairIndex - 1] 
+                                    ? (guestTable.guests || [])[selectedChairIndex - 1] 
+                                    : 'თავისუფალია'}
+                                </span>
+                              </div>
+                              <button 
+                                onClick={() => setSelectedChairIndex(null)}
+                                className="text-slate-400 hover:text-white px-1 font-bold text-xs"
+                              >
+                                ✕
+                              </button>
                             </div>
                           )}
                         </div>
